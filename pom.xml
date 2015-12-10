@@ -21,46 +21,73 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
-    <properties>
-        <java.compiler.version>1.7</java.compiler.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
+    
     <modules>
-        <module>api</module>
+        <module>util</module>
         <module>core</module>
         <module>examples</module>
     </modules>
 
+    <properties>
+        <java.version>1.7</java.version>
+        <java.compiler.version>${java.version}</java.compiler.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kompics.version>0.9.1-SNAPSHOT</kompics.version>
+        
+        <javaassist.version>3.18.2-GA</javaassist.version>
+        <junit.version>4.5</junit.version>
+        <guava.version>18.0</guava.version>
+        <tuples.version>1.2</tuples.version>
+        <config.version>1.2.1</config.version>
+        <logger.version>1.7.5</logger.version>
+    </properties>
+
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.5</version>
-            <scope>compile</scope>
+            <groupId>se.sics.kompics</groupId>
+            <artifactId>kompics-core</artifactId>
+            <version>${kompics.version}</version>
         </dependency>
+        <dependency>
+            <groupId>se.sics.kompics.basic</groupId>
+            <artifactId>kompics-port-timer</artifactId>
+            <version>${kompics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>se.sics.kompics.basic</groupId>
+            <artifactId>kompics-port-network</artifactId>
+            <version>${kompics.version}</version>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${javaassist.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
-            <scope>compile</scope>
+            <version>${logger.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.5</version>
+            <version>${logger.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>1.2.1</version>
+            <groupId>org.javatuples</groupId>
+            <artifactId>javatuples</artifactId>
+            <version>${tuples.version}</version>
         </dependency>
     </dependencies>
 

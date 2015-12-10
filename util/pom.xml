@@ -6,7 +6,7 @@
         <artifactId>kompics-simulator-pom</artifactId>
         <version>0.9.1-SNAPSHOT</version>
     </parent>
-    <artifactId>api</artifactId>
+    <artifactId>util</artifactId>
     <packaging>jar</packaging>
-    <name>Kompics Simulator API</name>
+    <name>Kompics Simulator Util</name>
 </project>
