@@ -24,31 +24,32 @@ import org.javatuples.Pair;
 import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.Identifier;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
- *
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class DeadLinkNetworkModel implements NetworkModel {
+    private final IdentifierExtractor idE;
     private final NetworkModel baseNM;
     private final Set<Pair<Identifier, Identifier>> deadLinks;
     
-    public DeadLinkNetworkModel(NetworkModel baseNM, Set<Pair<Identifier, Identifier>> deadLinks) {
+    /**
+     * @param baseNM
+     * @param deadLinks &lt;hostId, hostId&gt;
+     */
+    public DeadLinkNetworkModel(IdentifierExtractor idE, NetworkModel baseNM, Set<Pair<Identifier, Identifier>> deadLinks) {
+        this.idE = idE;
         this.baseNM = baseNM;
         this.deadLinks = deadLinks;
     }
 
     @Override
     public long getLatencyMs(Msg message) {
-        Address src = message.getHeader().getSource();
-        Address dst = message.getHeader().getDestination();
-        if(!(src instanceof Identifiable) || !(dst instanceof Identifiable)) {
-            throw new RuntimeException("used addresses are not identifiable - cannot used DeadLinkNetworkModel with these addresses");
-        }
-        Pair<Identifier, Identifier> link = Pair.with(((Identifiable)src).getId(), ((Identifiable)dst).getId());
-        if(deadLinks.contains(link)) {
+        Identifier srcId = idE.extract(message.getHeader().getSource());
+        Identifier dstId = idE.extract(message.getHeader().getDestination());
+        if(deadLinks.contains(Pair.with(srcId, dstId))) {
             return -1;
         } else {
             return baseNM.getLatencyMs(message);

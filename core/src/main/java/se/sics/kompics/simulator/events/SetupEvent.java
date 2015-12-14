@@ -19,8 +19,11 @@
 
 package se.sics.kompics.simulator.events;
 
-import java.util.HashSet;
 import java.util.Set;
+import org.javatuples.Pair;
+import se.sics.kompics.network.Address;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
+import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 import se.sics.kompics.simulator.util.GlobalViewHandler;
 import se.sics.kompics.simulator.util.SimulationContext;
 
@@ -32,14 +35,17 @@ public abstract class SetupEvent extends SimulationEvent {
         super();
     }
     
-    public Set<GlobalViewHandler> getGlobalViewHandlers() {
-        return new HashSet<>();
+    public Pair<Address, Set<GlobalViewHandler>> getGlobalViewSetup() {
+        return null;
     }
-    
+
     public void setupSystemContext() {
-        //do nothing
     }
     
     public void setupSimulationContext(SimulationContext sim) {
+    }
+    
+    public IdentifierExtractor getIdentifierExtractor() {
+        return new SocketIdExtractor();
     }
 }

@@ -18,36 +18,33 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package se.sics.kompics.simutil.identifiable.impl;
+package se.sics.kompics.simulator.network.identifier.impl;
 
+import com.google.common.primitives.Ints;
+import java.net.InetSocketAddress;
 import java.util.Objects;
-import java.util.UUID;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public class UUIDIdentifier implements Identifier {
-
-    public final UUID id;
-
-    public UUIDIdentifier(UUID id) {
-        this.id = id;
+public class SocketId implements Identifier {
+    private final InetSocketAddress isa;
+    
+    public SocketId(InetSocketAddress isa) {
+        this.isa = isa;
     }
-
-    public UUIDIdentifier() {
-        this(UUID.randomUUID());
-    }
-
+    
     @Override
     public int partition(int nrPartitions) {
-        return (int)(id.getLeastSignificantBits() % Integer.MAX_VALUE) % nrPartitions;
+        int ip = Ints.fromByteArray(isa.getAddress().getAddress());
+        return ip % nrPartitions;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.id);
+        int hash = 5;
+        hash = 89 * hash + Objects.hashCode(this.isa);
         return hash;
     }
 
@@ -59,15 +56,10 @@ public class UUIDIdentifier implements Identifier {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final UUIDIdentifier other = (UUIDIdentifier) obj;
-        if (!Objects.equals(this.id, other.id)) {
+        final SocketId other = (SocketId) obj;
+        if (!Objects.equals(this.isa, other.isa)) {
             return false;
         }
         return true;
-    }
-    
-    @Override
-    public String toString() {
-        return id.toString();
     }
 }

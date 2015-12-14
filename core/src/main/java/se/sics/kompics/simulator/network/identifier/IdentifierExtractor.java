@@ -18,11 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package se.sics.kompics.simutil.identifiable;
+package se.sics.kompics.simulator.network.identifier;
+
+import se.sics.kompics.network.Address;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public interface Identifier {
-    public int partition(int nrPartitions);
+public interface IdentifierExtractor {
+    public Identifier extract(Address adr);
 }

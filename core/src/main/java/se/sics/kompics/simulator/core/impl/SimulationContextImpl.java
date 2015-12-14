@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.util.SimulationContext;
-import se.sics.kompics.simutil.identifiable.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>

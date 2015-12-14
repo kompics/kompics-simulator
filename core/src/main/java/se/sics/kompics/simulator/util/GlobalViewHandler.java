@@ -20,14 +20,13 @@ package se.sics.kompics.simulator.util;
 
 import se.sics.kompics.ClassMatchedHandler;
 import se.sics.kompics.KompicsEvent;
-import se.sics.kompics.network.Address;
-import se.sics.kompics.network.Header;
-import se.sics.kompics.simutil.msg.ContentMsg;
+import se.sics.kompics.PatternExtractor;
+import se.sics.kompics.network.Msg;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public abstract class GlobalViewHandler<E extends KompicsEvent> extends ClassMatchedHandler<E, ContentMsg<Address, Header<Address>, E>> {
+public abstract class GlobalViewHandler<E extends KompicsEvent, M extends Msg & PatternExtractor<Class<E>, E>> extends ClassMatchedHandler<E, M> {
     private SimulationContext simContext;
     
     public void setSimulationContext(SimulationContext simContext) {
@@ -35,9 +34,9 @@ public abstract class GlobalViewHandler<E extends KompicsEvent> extends ClassMat
     }
     
     @Override 
-    public final void handle(E content, ContentMsg<Address, Header<Address>, E> container) {
+    public final void handle(E content, M container) {
         handle(content, container, simContext);
     }
     
-    public abstract void handle(E content, ContentMsg<Address, Header<Address>, E> container, SimulationContext simContext);
+    public abstract void handle(E content, M container, SimulationContext simContext);
 }

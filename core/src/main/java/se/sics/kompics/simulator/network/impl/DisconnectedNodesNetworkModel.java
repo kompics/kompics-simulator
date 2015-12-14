@@ -19,33 +19,31 @@
 package se.sics.kompics.simulator.network.impl;
 
 import java.util.Set;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.Identifier;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class DisconnectedNodesNetworkModel implements NetworkModel {
 
+    private final IdentifierExtractor idE;
     private final NetworkModel baseNM;
     private final Set<Identifier> disconnectedNodes;
 
-    public DisconnectedNodesNetworkModel(NetworkModel baseNM, Set<Identifier> disconnectedNodes) {
+    public DisconnectedNodesNetworkModel(IdentifierExtractor idE, NetworkModel baseNM, Set<Identifier> disconnectedNodes) {
+        this.idE = idE;
         this.baseNM = baseNM;
         this.disconnectedNodes = disconnectedNodes;
     }
 
     @Override
     public long getLatencyMs(Msg message) {
-        Address src = message.getHeader().getSource();
-        Address dst = message.getHeader().getDestination();
-        if(!(src instanceof Identifiable) || !(dst instanceof Identifiable)) {
-            throw new RuntimeException("used addresses are not identifiable - cannot used DeadLinkNetworkModel with these addresses");
-        }
-        if (disconnectedNodes.contains(((Identifiable)src).getId()) || disconnectedNodes.contains(((Identifiable)dst).getId()))  {
+        Identifier srcId = idE.extract(message.getHeader().getSource());
+        Identifier dstId = idE.extract(message.getHeader().getDestination());
+        if (disconnectedNodes.contains(srcId) || disconnectedNodes.contains(dstId))  {
             return -1;
         }
         return baseNM.getLatencyMs(message);

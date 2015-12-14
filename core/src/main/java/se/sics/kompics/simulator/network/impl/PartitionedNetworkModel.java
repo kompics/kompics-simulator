@@ -22,34 +22,34 @@ import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 import se.sics.kompics.simulator.network.PartitionMapper;
-import se.sics.kompics.simutil.identifiable.Identifiable;
+import se.sics.kompics.simulator.network.identifier.Identifier;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class PartitionedNetworkModel implements NetworkModel {
 
+    private final IdentifierExtractor idE;
     private final NetworkModel netModel;
     private final PartitionMapper mapper;
 
-    public PartitionedNetworkModel(NetworkModel netModel, PartitionMapper mapper) {
+    public PartitionedNetworkModel(IdentifierExtractor idE, NetworkModel netModel, PartitionMapper mapper) {
+        this.idE = idE;
         this.netModel = netModel;
         this.mapper = mapper;
     }
 
     @Override
     public long getLatencyMs(Msg message) {
-        Address src = message.getHeader().getSource();
-        Address dst = message.getHeader().getDestination();
-        if (src instanceof Identifiable && dst instanceof Identifiable) {
-            int srcPartition = mapper.getPartition(((Identifiable) src).getId());
-            int destPartition = mapper.getPartition(((Identifiable) dst).getId());
-            if (srcPartition == destPartition) {
-                return netModel.getLatencyMs(message);
-            }
-            return -1;
-        } else {
-            throw new RuntimeException("Incomplete - src/dst is not Identifiable - or at least of no known Identifiable");
+        Identifier srcId = idE.extract(message.getHeader().getSource());
+        Identifier dstId = idE.extract(message.getHeader().getDestination());
+
+        int srcPartition = mapper.getPartition(srcId);
+        int destPartition = mapper.getPartition(dstId);
+        if (srcPartition == destPartition) {
+            return netModel.getLatencyMs(message);
         }
+        return -1;
     }
 }

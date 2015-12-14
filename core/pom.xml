@@ -9,12 +9,4 @@
     <artifactId>core</artifactId>
     <packaging>jar</packaging>
     <name>Kompics Simulator Core</name>
-    
-    <dependencies>
-        <dependency>
-            <groupId>se.sics.kompics.simulator</groupId>
-            <artifactId>util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>

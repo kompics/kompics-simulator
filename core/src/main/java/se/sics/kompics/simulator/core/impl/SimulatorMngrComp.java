@@ -18,35 +18,28 @@
  */
 package se.sics.kompics.simulator.core.impl;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.sics.kompics.Channel;
-import se.sics.kompics.ClassMatchedHandler;
 import se.sics.kompics.Component;
 import se.sics.kompics.ComponentDefinition;
 import se.sics.kompics.Handler;
 import se.sics.kompics.Init;
 import se.sics.kompics.Kill;
 import se.sics.kompics.Kompics;
-import se.sics.kompics.KompicsEvent;
 import se.sics.kompics.Negative;
 import se.sics.kompics.Positive;
 import se.sics.kompics.Start;
 import se.sics.kompics.config.Config;
 import se.sics.kompics.config.ConfigUpdate;
 import se.sics.kompics.network.Address;
-import se.sics.kompics.network.Header;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.network.Network;
 import se.sics.kompics.simulator.SimulationScenario;
-import se.sics.kompics.simulator.SimulationSetup;
 import se.sics.kompics.simulator.core.SimulatorComp;
 import se.sics.kompics.simulator.core.SimulatorControlPort;
 import se.sics.kompics.simulator.core.SimulatorPort;
@@ -55,10 +48,10 @@ import se.sics.kompics.simulator.events.SetupEvent;
 import se.sics.kompics.simulator.events.TerminateExperiment;
 import se.sics.kompics.simulator.events.system.KillNodeEvent;
 import se.sics.kompics.simulator.events.system.StartNodeEvent;
-import se.sics.kompics.simutil.selectors.DestinationHostSelector;
-import se.sics.kompics.simutil.identifiable.Identifier;
-import se.sics.kompics.simutil.msg.ContentMsg;
-import se.sics.kompics.simutil.msg.impl.BasicAddress;
+import se.sics.kompics.simulator.network.identifier.DestinationHostSelector;
+import se.sics.kompics.simulator.network.identifier.Identifier;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
+import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 import se.sics.kompics.simulator.util.GlobalViewHandler;
 import se.sics.kompics.timer.Timer;
 
@@ -78,6 +71,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
     private final Negative providedNetwork = provides(Network.class);
 
     private final SimulationContextImpl simulationContext;
+    private IdentifierExtractor idE;
     private Map<Identifier, Pair<Component, Channel[]>> systemNodes = new HashMap<>();
 
     public SimulatorMngrComp(SimulatorMngrInit init) {
@@ -90,11 +84,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         subscribe(handleKillNode, simPort);
         subscribe(handleTerminateExperiment, simControlPort);
 
-        Config.Builder cb = config().modify(id());
-        cb.setValue(SimulationSetup.GLOBAL_VIEW_ADDRESS, SimulationSetup.globalViewAddress);
-        updateConfig(cb.finalise());
-
-        connect(providedNetwork, requiredNetwork, SimTrafficSelector.passAppTraffic(true), Channel.TWO_WAY);
+        defaultSetup();
     }
 
     //**********CONTROL HANDLERS************************************************
@@ -112,14 +102,26 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         }
     };
     //**************************************************************************
+    private void defaultSetup() {
+        connect(providedNetwork, requiredNetwork, Channel.TWO_WAY);
+        idE = new SocketIdExtractor();
+    }
+    
     private final Handler handleSetup = new Handler<SetupEvent>() {
         @Override
         public void handle(SetupEvent setup) {
             LOG.debug("{}received setup:{}", logPrefix, setup);
-            //subscribe custom handlers for specific network events
-            for (final GlobalViewHandler globalViewHandler : setup.getGlobalViewHandlers()) {
-                globalViewHandler.setSimulationContext(simulationContext);
-                subscribe(globalViewHandler, providedNetwork);
+
+            idE = setup.getIdentifierExtractor();
+            
+            Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
+            if (globalViewSetup != null) {
+                for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
+                    globalViewHandler.setSimulationContext(simulationContext);
+                    subscribe(globalViewHandler, providedNetwork);
+                }
+                disconnect(providedNetwork, requiredNetwork);
+                connect(providedNetwork, requiredNetwork, new SimTrafficSelector(globalViewSetup.getValue0(), true), Channel.TWO_WAY);
             }
             setup.setupSystemContext();
             setup.setupSimulationContext(simulationContext);
@@ -144,7 +146,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
             Channel[] channels = new Channel[2];
             channels[0] = connect(node.getNegative(Timer.class), timer, Channel.TWO_WAY);
             channels[1] = connect(node.getNegative(Network.class), providedNetwork.getPair(),
-                    new DestinationHostSelector(startNode.getNodeId(), true), Channel.TWO_WAY);
+                    new DestinationHostSelector(startNode.getNodeId(), idE, true), Channel.TWO_WAY);
 
             systemNodes.put(startNode.getNodeId(), Pair.with(node, channels));
             simulationContext.startNode(startNode.getNodeId());

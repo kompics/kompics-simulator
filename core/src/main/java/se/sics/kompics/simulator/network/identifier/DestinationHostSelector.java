@@ -16,28 +16,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package se.sics.kompics.simutil.selectors;
+package se.sics.kompics.simulator.network.identifier;
 
 import se.sics.kompics.ChannelSelector;
 import se.sics.kompics.network.Msg;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.impl.SocketId;
+import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
 public class DestinationHostSelector extends ChannelSelector<Msg, Identifier> {
-
-    public DestinationHostSelector(Identifier hostId, boolean positive) {
+    private final IdentifierExtractor sIdE;
+    
+    public DestinationHostSelector(Identifier hostId, IdentifierExtractor sIdE, boolean positive) {
         super(Msg.class, hostId, positive);
+        this.sIdE = sIdE;
     }
 
     @Override
     public Identifier getValue(Msg msg) {
-        if (!(msg.getHeader().getDestination() instanceof Identifiable)) {
-            throw new RuntimeException("cannot resolve filter for address type:" +  msg.getHeader().getDestination().getClass());
-        }
-        Identifier destination = ((Identifiable)msg.getHeader().getDestination()).getId();
-        return destination;
+        return sIdE.extract(msg.getHeader().getDestination());
     }
 }

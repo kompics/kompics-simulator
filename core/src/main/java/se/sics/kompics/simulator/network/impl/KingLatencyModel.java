@@ -21,11 +21,10 @@ package se.sics.kompics.simulator.network.impl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Random;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.Identifier;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
  * The <code>KingLatencyMap</code> class.
@@ -36,16 +35,18 @@ import se.sics.kompics.simutil.identifiable.Identifier;
  */
 public final class KingLatencyModel implements NetworkModel {
 
+    private final IdentifierExtractor idE;
     private final Random random;
-
     private long[] repeatedDiagonal;
 
-    public KingLatencyModel() {
+    public KingLatencyModel(IdentifierExtractor idE) {
+        this.idE = idE;
         random = new Random();
         initRepeatedDiagonal(random);
     }
 
-    public KingLatencyModel(long seed) {
+    public KingLatencyModel(IdentifierExtractor idE, long seed) {
+        this.idE = idE;
         random = new Random(seed);
         initRepeatedDiagonal(random);
     }
@@ -65,23 +66,18 @@ public final class KingLatencyModel implements NetworkModel {
 
     @Override
     public long getLatencyMs(Msg message) {
-        int s = addressToInt(message.getHeader().getSource());
-        int d = addressToInt(message.getHeader().getDestination());
+        Identifier srcId = idE.extract(message.getHeader().getSource());
+        Identifier dstId = idE.extract(message.getHeader().getDestination());
+        int srcPart = srcId.partition(KingMatrix.SIZE);
+        int dstPart = dstId.partition(KingMatrix.SIZE);
 
-        if (s == d) {
-            Identifier srcId = ((Identifiable) message.getHeader().getSource()).getId();
-            Identifier dstId = ((Identifiable) message.getHeader().getDestination()).getId();
+        if (srcPart == dstPart) {
             if (srcId.equals(dstId)) {
-                return repeatedDiagonal[s];
+                return repeatedDiagonal[srcPart];
             }
         }
 
-        return KingMatrix.KING[s][d];
-    }
-
-    private final int addressToInt(Address address) {
-        Identifier id = ((Identifiable)address).getId();
-        return id.partition(KingMatrix.SIZE);
+        return KingMatrix.KING[srcPart][dstPart];
     }
 
     private static final class KingMatrix {
@@ -91,7 +87,7 @@ public final class KingLatencyModel implements NetworkModel {
 
         static {
             int king[][];
-            try(ObjectInputStream ois = new ObjectInputStream(KingMatrix.class.getResourceAsStream("KingMatrix.data"))) {
+            try (ObjectInputStream ois = new ObjectInputStream(KingMatrix.class.getResourceAsStream("KingMatrix.data"))) {
                 king = (int[][]) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 king = null;

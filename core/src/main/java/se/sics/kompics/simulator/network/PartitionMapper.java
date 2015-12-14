@@ -19,11 +19,9 @@
 
 package se.sics.kompics.simulator.network;
 
-import se.sics.kompics.simutil.identifiable.Identifier;
-
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public interface PartitionMapper<I extends Identifier> {
-    public int getPartition(I nodeId);
+public interface PartitionMapper<ID extends Object> {
+    public int getPartition(ID nodeId);
 }

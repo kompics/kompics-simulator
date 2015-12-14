@@ -18,23 +18,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package se.sics.kompics.simulator;
+package se.sics.kompics.simulator.network.identifier.impl;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import se.sics.kompics.simutil.msg.impl.BasicAddress;
+import se.sics.kompics.network.Address;
+import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public class SimulationSetup {
-    public static final String GLOBAL_VIEW_ADDRESS = "simulation.globalview";
-    public static final BasicAddress globalViewAddress;
-    static {
-        try {
-            globalViewAddress = new BasicAddress(InetAddress.getByName("0.0.0.0"), 0, null);
-        } catch (UnknownHostException ex) {
-            throw new RuntimeException("global view address error");
-        }
+public class SocketIdExtractor implements IdentifierExtractor {
+
+    @Override
+    public SocketId extract(Address adr) {
+        return new SocketId(adr.asSocket());
     }
 }

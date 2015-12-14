@@ -23,36 +23,21 @@ package se.sics.kompics.simulator.core.impl.selector;
 import se.sics.kompics.ChannelSelector;
 import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
-import se.sics.kompics.simulator.SimulationSetup;
-import se.sics.kompics.simutil.identifiable.Identifier;
 
 /**
- *
  * @author Alex Ormenisan <aaor@kth.se>
  */
 public class SimTrafficSelector extends ChannelSelector<Msg, Boolean> {
-    public static final Boolean SIMULATION_TRAFFIC = true;
-    public static final Boolean APP_TRAFFIC = false;
+    private final Address globalView;
     
-    public SimTrafficSelector(boolean trafficType, boolean positive) {
-        super(Msg.class, trafficType, positive);
+    public SimTrafficSelector(Address globalView, boolean positive) {
+        super(Msg.class, false, positive);
+        this.globalView = globalView;
     }
     
     @Override
     public Boolean getValue(Msg msg) {
         Address dst = msg.getHeader().getDestination();
-        if(SimulationSetup.globalViewAddress.sameHostAs(dst)) {
-            return SIMULATION_TRAFFIC;
-        } else {
-            return APP_TRAFFIC;
-        }
-    }
-    
-    public static SimTrafficSelector passAppTraffic(boolean positive) {
-        return new SimTrafficSelector(APP_TRAFFIC, true);
-    }
-    
-     public static SimTrafficSelector passSimTraffic(boolean positive) {
-        return new SimTrafficSelector(SIMULATION_TRAFFIC, true);
+        return dst.sameHostAs(globalView);
     }
 }

@@ -19,7 +19,6 @@
 package se.sics.kompics.simulator.events.system;
 
 import se.sics.kompics.simulator.events.SystemEvent;
-import se.sics.kompics.simutil.identifiable.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
@@ -30,5 +29,5 @@ public abstract class KillNodeEvent extends SystemEvent {
         super();
     }
 
-    public abstract Identifier getNodeId();
+    public abstract Object getNodeId();
 }

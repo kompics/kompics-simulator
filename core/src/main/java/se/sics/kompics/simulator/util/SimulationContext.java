@@ -20,8 +20,8 @@
  */
 package se.sics.kompics.simulator.util;
 
-import se.sics.kompics.simutil.identifiable.Identifier;
 import java.util.Set;
+import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>

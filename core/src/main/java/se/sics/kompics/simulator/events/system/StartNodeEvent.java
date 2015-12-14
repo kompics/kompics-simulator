@@ -16,32 +16,45 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package se.sics.kompics.simulator.events.system;
 
+import java.nio.channels.Selector;
 import java.util.HashMap;
 import java.util.Map;
 import se.sics.kompics.ComponentDefinition;
 import se.sics.kompics.Init;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.events.SystemEvent;
-import se.sics.kompics.simutil.identifiable.Identifier;
+import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
- * @param <E>
  */
 public abstract class StartNodeEvent<E extends ComponentDefinition> extends SystemEvent {
 
     public StartNodeEvent() {
         super();
     }
-    
+
+    /**
+     * @return an object that can uniquely identify this node instance
+     * (bijection object->node). Require equals and hash implementations
+     */
     public abstract Identifier getNodeId();
-    public abstract Class<E> getComponentDefinition();
-    public abstract Init<E> getComponentInit();
+
+    /**
+     * Override to provide custom implementation. Default implementation
+     * provides no per node config
+     *
+     * @return per node configuration difference &lt;optionName,optionValue&gt;
+     */
     public Map<String, Object> initConfigUpdate() {
         HashMap<String, Object> empty = new HashMap<>();
         return empty;
     }
+
+    public abstract Selector getHostTrafficSelector();
+
+    public abstract Class<E> getComponentDefinition();
+
+    public abstract Init<E> getComponentInit();
 }
