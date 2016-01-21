@@ -20,27 +20,23 @@
  */
 package se.sics.kompics.simulator.util;
 
+import java.util.Map;
 import java.util.Set;
+import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public interface SimulationContext {
+public interface GlobalView {
 
-    public Set<Identifier> getAliveNodes();
+    public Map<Identifier, Address> getAliveNodes();
 
-    public Set<Identifier> getDeadNodes();
+    public Map<Identifier, Address> getDeadNodes();
 
-    /**
-     * @param identifier
-     * @param obj
-     * @return false if registration could not happen. Possible causes: 
-     * 1. there is already an object registered with that identifier
-     */
-    public boolean register(String identifier, Object obj);
+    public boolean setValue(String key, Object value);
     
-    public Object get(String identifier);
+    public <T> T getValue(String key, Class<T> type) throws ClassCastException;
     
     public void terminate();
 }

@@ -45,7 +45,7 @@ import se.sics.kompics.simulator.core.SimulatorComp;
 import se.sics.kompics.simulator.core.SimulatorControlPort;
 import se.sics.kompics.simulator.core.SimulatorPort;
 import se.sics.kompics.simulator.core.SimulatorSystem;
-import se.sics.kompics.simulator.events.ChangeNetworkModelEvent;
+import se.sics.kompics.simulator.events.system.ChangeNetworkModelEvent;
 import se.sics.kompics.simulator.events.TerminateExperiment;
 import se.sics.kompics.simulator.network.NetworkModel;
 import se.sics.kompics.simulator.stochastic.events.StochasticKompicsSimulatorEvent;

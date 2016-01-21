@@ -43,8 +43,7 @@ import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.core.SimulatorComp;
 import se.sics.kompics.simulator.core.SimulatorControlPort;
 import se.sics.kompics.simulator.core.SimulatorPort;
-import se.sics.kompics.simulator.core.impl.selector.SimTrafficSelector;
-import se.sics.kompics.simulator.events.SetupEvent;
+import se.sics.kompics.simulator.events.system.SetupEvent;
 import se.sics.kompics.simulator.events.TerminateExperiment;
 import se.sics.kompics.simulator.events.system.KillNodeEvent;
 import se.sics.kompics.simulator.events.system.StartNodeEvent;
@@ -70,13 +69,13 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
 
     private final Negative providedNetwork = provides(Network.class);
 
-    private final SimulationContextImpl simulationContext;
+    private final GlobalViewImpl globalView;
     private IdentifierExtractor idE;
     private Map<Identifier, Pair<Component, Channel[]>> systemNodes = new HashMap<>();
 
     public SimulatorMngrComp(SimulatorMngrInit init) {
         LOG.info("{}initiating...", logPrefix);
-        simulationContext = new SimulationContextImpl(this, SimulationScenario.getRandom());
+        globalView = new GlobalViewImpl(this, SimulationScenario.getRandom());
 
         subscribe(handleStart, control);
         subscribe(handleSetup, simPort);
@@ -114,17 +113,15 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
 
             idE = setup.getIdentifierExtractor();
             
-            Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
-            if (globalViewSetup != null) {
-                for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
-                    globalViewHandler.setSimulationContext(simulationContext);
-                    subscribe(globalViewHandler, providedNetwork);
-                }
-                disconnect(providedNetwork, requiredNetwork);
-                connect(providedNetwork, requiredNetwork, new SimTrafficSelector(globalViewSetup.getValue0(), true), Channel.TWO_WAY);
-            }
+//            Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
+//            if (globalViewSetup != null) {
+//                for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
+//                    globalViewHandler.setSimulationContext(globalView);
+//                    subscribe(globalViewHandler, providedNetwork);
+//                }
+//            }
             setup.setupSystemContext();
-            setup.setupSimulationContext(simulationContext);
+            setup.setupGlobalView(globalView);
         }
     };
 
@@ -133,23 +130,29 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         @Override
         public void handle(StartNodeEvent startNode) {
             LOG.debug("{}received start:{} for node:{}", new Object[]{logPrefix, startNode,
-                startNode.getNodeId()});
+                startNode.getNodeAddress()});
 
             Config.Builder cb = config().modify(id());
             //TODO Alex netbeans 8.0.2 bug? need to manually cast the Set to the correct thing
             for (Map.Entry<String, Object> confUpdate : (Set<Map.Entry<String, Object>>) startNode.initConfigUpdate().entrySet()) {
                 cb.setValue(confUpdate.getKey(), confUpdate.getValue());
             }
+            cb.setValue("simulation.globalview", globalView);
             ConfigUpdate configUpdate = cb.finalise();
 
-            Component node = create(startNode.getComponentDefinition(), startNode.getComponentInit(), configUpdate);
+            Component node;
+            if(startNode.getComponentInit() instanceof Init.None) {
+                node = create(startNode.getComponentDefinition(), Init.NONE, configUpdate);
+            } else {
+                node = create(startNode.getComponentDefinition(), startNode.getComponentInit(), configUpdate);
+            }
             Channel[] channels = new Channel[2];
             channels[0] = connect(node.getNegative(Timer.class), timer, Channel.TWO_WAY);
             channels[1] = connect(node.getNegative(Network.class), providedNetwork.getPair(),
-                    new DestinationHostSelector(startNode.getNodeId(), idE, true), Channel.TWO_WAY);
+                    new DestinationHostSelector(idE.extract(startNode.getNodeAddress()), idE, true), Channel.TWO_WAY);
 
-            systemNodes.put(startNode.getNodeId(), Pair.with(node, channels));
-            simulationContext.startNode(startNode.getNodeId());
+            systemNodes.put(idE.extract(startNode.getNodeAddress()), Pair.with(node, channels));
+            globalView.startNode(idE.extract(startNode.getNodeAddress()), startNode.getNodeAddress());
             trigger(Start.event, node.control());
         }
     };
@@ -158,15 +161,16 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
 
         @Override
         public void handle(KillNodeEvent killNode) {
-            LOG.debug("{}received kill:{} for node:{}", new Object[]{logPrefix,
-                killNode, killNode.getNodeId()});
-            Pair<Component, Channel[]> node = systemNodes.remove(killNode.getNodeId());
+            LOG.debug("{}received kill:{}", new Object[]{logPrefix, killNode});
+            Pair<Component, Channel[]> node = systemNodes.remove(idE.extract(killNode.getNodeAddress()));
             if (node == null) {
                 throw new RuntimeException("node does not exist");
             }
+            globalView.killNode(idE.extract(killNode.getNodeAddress()));
             disconnect(node.getValue1()[0]);
             disconnect(node.getValue1()[1]);
             trigger(Kill.event, node.getValue0().control());
+            
         }
     };
 

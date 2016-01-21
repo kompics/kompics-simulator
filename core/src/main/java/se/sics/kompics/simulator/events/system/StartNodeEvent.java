@@ -18,28 +18,21 @@
  */
 package se.sics.kompics.simulator.events.system;
 
-import java.nio.channels.Selector;
 import java.util.HashMap;
 import java.util.Map;
 import se.sics.kompics.ComponentDefinition;
 import se.sics.kompics.Init;
+import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.events.SystemEvent;
-import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public abstract class StartNodeEvent<E extends ComponentDefinition> extends SystemEvent {
+public abstract class StartNodeEvent extends SystemEvent {
 
     public StartNodeEvent() {
         super();
     }
-
-    /**
-     * @return an object that can uniquely identify this node instance
-     * (bijection object->node). Require equals and hash implementations
-     */
-    public abstract Identifier getNodeId();
 
     /**
      * Override to provide custom implementation. Default implementation
@@ -51,10 +44,10 @@ public abstract class StartNodeEvent<E extends ComponentDefinition> extends Syst
         HashMap<String, Object> empty = new HashMap<>();
         return empty;
     }
+    
+    public abstract Address getNodeAddress();
 
-    public abstract Selector getHostTrafficSelector();
+    public abstract Class<? extends ComponentDefinition> getComponentDefinition();
 
-    public abstract Class<E> getComponentDefinition();
-
-    public abstract Init<E> getComponentInit();
+    public abstract Init getComponentInit();
 }

@@ -17,8 +17,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package se.sics.kompics.simulator.events;
+package se.sics.kompics.simulator.events.system;
 
+import se.sics.kompics.simulator.events.SimulationEvent;
 import se.sics.kompics.simulator.network.NetworkModel;
 
 /**

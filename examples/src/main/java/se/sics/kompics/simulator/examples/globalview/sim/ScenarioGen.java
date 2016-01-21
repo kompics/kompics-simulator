@@ -26,7 +26,7 @@ import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.adaptor.Operation;
 import se.sics.kompics.simulator.adaptor.Operation1;
 import se.sics.kompics.simulator.adaptor.distributions.extra.BasicIntSequentialDistribution;
-import se.sics.kompics.simulator.events.SetupEvent;
+import se.sics.kompics.simulator.events.system.SetupEvent;
 import se.sics.kompics.simulator.events.system.StartNodeEvent;
 import se.sics.kompics.simulator.examples.globalview.HostComp;
 import se.sics.kompics.simulator.examples.globalview.PingPongDoneEvent;
@@ -34,7 +34,7 @@ import se.sics.kompics.simutil.identifiable.Identifiable;
 import se.sics.kompics.simutil.identifiable.Identifier;
 import se.sics.kompics.simutil.msg.ContentMsg;
 import se.sics.kompics.simulator.util.GlobalViewHandler;
-import se.sics.kompics.simulator.util.SimulationContext;
+import se.sics.kompics.simulator.util.GlobalView;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
@@ -47,7 +47,7 @@ public class ScenarioGen {
         public SetupEvent generate() {
             final GlobalViewHandler handleGlobalPingDone = new GlobalViewHandler<PingPongDoneEvent>() {
                 @Override
-                public void handle(PingPongDoneEvent content, ContentMsg<Address, Header<Address>, PingPongDoneEvent> container, SimulationContext simContext) {
+                public void handle(PingPongDoneEvent content, ContentMsg<Address, Header<Address>, PingPongDoneEvent> container, GlobalView simContext) {
                     AllPingPong view = (AllPingPong) simContext.get(AllPingPong.OPT_NAME);
                     view.pingpongCount++;
                     if (view.pingpongCount == 3) {
@@ -65,7 +65,7 @@ public class ScenarioGen {
                 }
 
                 @Override
-                public void setupSimulationContext(SimulationContext simContext) {
+                public void setupGlobalView(GlobalView simContext) {
                     simContext.register(AllPingPong.OPT_NAME, new AllPingPong());
                 }
             };

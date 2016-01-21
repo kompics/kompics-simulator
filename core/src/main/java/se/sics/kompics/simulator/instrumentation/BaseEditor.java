@@ -66,14 +66,10 @@ public class BaseEditor extends ExprEditor {
                 }
 
                 newExpr.replace("{" + proceed + "}");
-//                newExpr.replace("{ String instrumentationCallingClass = \"" + callingClass.getName() + "\"; "
-//                        + "String instrumentationLoggerType = \"" + Random.class.getName() + "\";"
-//                        + CodeInstrumentation.class.getName() + ".applyBefore(instrumentationLoggerType, instrumentationCallingClass, $args);"
-//                        + proceed + " }");
                 return;
             }
             if (SecureRandom.class.getName().equals(constructorClass)) {
-                System.out.println("blas");
+                throw new RuntimeException("SecureRandom not accepted");
             }
         } catch (NotFoundException | CannotCompileException ex) {
             LOG.error("instrumentation of:{} error:{}", new Object[]{constructorClass, ex.getMessage()});

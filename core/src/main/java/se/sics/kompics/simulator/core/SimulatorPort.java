@@ -20,8 +20,8 @@
 package se.sics.kompics.simulator.core;
 
 import se.sics.kompics.PortType;
-import se.sics.kompics.simulator.events.ChangeNetworkModelEvent;
-import se.sics.kompics.simulator.events.SetupEvent;
+import se.sics.kompics.simulator.events.system.ChangeNetworkModelEvent;
+import se.sics.kompics.simulator.events.system.SetupEvent;
 import se.sics.kompics.simulator.events.SystemEvent;
 
 /**

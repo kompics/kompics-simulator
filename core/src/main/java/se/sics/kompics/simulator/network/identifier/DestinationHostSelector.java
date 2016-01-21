@@ -20,8 +20,6 @@ package se.sics.kompics.simulator.network.identifier;
 
 import se.sics.kompics.ChannelSelector;
 import se.sics.kompics.network.Msg;
-import se.sics.kompics.simulator.network.identifier.impl.SocketId;
-import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
@@ -36,6 +34,7 @@ public class DestinationHostSelector extends ChannelSelector<Msg, Identifier> {
 
     @Override
     public Identifier getValue(Msg msg) {
-        return sIdE.extract(msg.getHeader().getDestination());
+        Identifier id = sIdE.extract(msg.getHeader().getDestination());
+        return id;
     }
 }

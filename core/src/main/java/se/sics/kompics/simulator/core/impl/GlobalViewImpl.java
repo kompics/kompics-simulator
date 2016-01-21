@@ -23,22 +23,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.Identifier;
-import se.sics.kompics.simulator.util.SimulationContext;
+import se.sics.kompics.simulator.util.GlobalView;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public class SimulationContextImpl implements SimulationContext {
+public class GlobalViewImpl implements GlobalView {
 
     private final SimulatorMngrComp simMngr;
     private final Random rand;
-    private final Set<Identifier> aliveNodes = new HashSet<>();
-    private final Set<Identifier> deadNodes = new HashSet<>();
+    private final Map<Identifier, Address> aliveNodes = new HashMap<>();
+    private final Map<Identifier, Address> deadNodes = new HashMap<>();
     private final Map<String, Object> otherContext = new HashMap<>();
     private boolean terminated;
 
-    public SimulationContextImpl(SimulatorMngrComp simMngr, Random rand) {
+    public GlobalViewImpl(SimulatorMngrComp simMngr, Random rand) {
         this.simMngr = simMngr;
         this.rand = rand;
         terminated = false;
@@ -49,22 +50,21 @@ public class SimulationContextImpl implements SimulationContext {
     }
 
     @Override
-    public Set<Identifier> getAliveNodes() {
+    public Map<Identifier, Address> getAliveNodes() {
         return aliveNodes;
     }
 
-    public void startNode(Identifier id) {
-        aliveNodes.add(id);
+    public void startNode(Identifier id, Address adr) {
+        aliveNodes.put(id, adr);
     }
 
     @Override
-    public Set<Identifier> getDeadNodes() {
+    public Map<Identifier, Address> getDeadNodes() {
         return deadNodes;
     }
 
     public void killNode(Identifier id) {
-        aliveNodes.remove(id);
-        deadNodes.add(id);
+        deadNodes.put(id, aliveNodes.remove(id));
     }
 
     @Override
@@ -79,23 +79,14 @@ public class SimulationContextImpl implements SimulationContext {
         return terminated;
     }
 
-    /**
-     * @param identifier
-     * @param obj
-     * @return false if registration could not happen. Possible causes: 1. there
-     * is already an object registered with that identifier
-     */
     @Override
-    public boolean register(String identifier, Object obj) {
-        if (otherContext.containsKey(identifier)) {
-            return false;
-        }
-        otherContext.put(identifier, obj);
+    public boolean setValue(String key, Object value) {
+        otherContext.put(key, value);
         return true;
     }
 
     @Override
-    public Object get(String identifier) {
-        return otherContext.get(identifier);
+    public <T> T getValue(String key, Class<T> type) throws ClassCastException {
+        return (T)otherContext.get(key);
     }
 }

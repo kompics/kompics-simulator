@@ -42,15 +42,10 @@ public class LauncherComp extends ComponentDefinition {
     public static BasicSimulationScheduler simulatorScheduler = new BasicSimulationScheduler();
 
     public static void main(String[] args) {
-        simulationSetup();
-        
         Kompics.setScheduler(simulatorScheduler);
         Kompics.createAndStart(LauncherComp.class, 1);
     }
     
-    private static void simulationSetup() {
-    }
-
     private final SimulationScenario scenario = SimulationScenario.load(System.getProperty("scenario"));
     
     public LauncherComp(){

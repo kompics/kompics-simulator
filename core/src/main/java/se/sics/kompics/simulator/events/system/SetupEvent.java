@@ -17,15 +17,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package se.sics.kompics.simulator.events;
+package se.sics.kompics.simulator.events.system;
 
 import java.util.Set;
 import org.javatuples.Pair;
 import se.sics.kompics.network.Address;
+import se.sics.kompics.simulator.events.SimulationEvent;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 import se.sics.kompics.simulator.util.GlobalViewHandler;
-import se.sics.kompics.simulator.util.SimulationContext;
+import se.sics.kompics.simulator.util.GlobalView;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
@@ -35,14 +36,10 @@ public abstract class SetupEvent extends SimulationEvent {
         super();
     }
     
-    public Pair<Address, Set<GlobalViewHandler>> getGlobalViewSetup() {
-        return null;
-    }
-
     public void setupSystemContext() {
     }
     
-    public void setupSimulationContext(SimulationContext sim) {
+    public void setupGlobalView(GlobalView gv) {
     }
     
     public IdentifierExtractor getIdentifierExtractor() {

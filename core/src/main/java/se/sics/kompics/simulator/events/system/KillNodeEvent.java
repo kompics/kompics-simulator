@@ -18,6 +18,7 @@
  */
 package se.sics.kompics.simulator.events.system;
 
+import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.events.SystemEvent;
 
 /**
@@ -29,5 +30,5 @@ public abstract class KillNodeEvent extends SystemEvent {
         super();
     }
 
-    public abstract Object getNodeId();
+    public abstract Address getNodeAddress();
 }
