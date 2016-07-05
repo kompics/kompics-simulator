@@ -47,6 +47,7 @@ public class CodeInstrumentation {
 
     public static Set<String> knownInterceptorExceptions() {
         Set<String> exceptions = new HashSet<>();
+        exceptions.add("se.sics.kompics.Kompics");
         exceptions.add("org.apache.log4j.PropertyConfigurator");
         exceptions.add("org.apache.log4j.helpers.FileWatchdog");
         exceptions.add("org.mortbay.thread.QueuedThreadPool");

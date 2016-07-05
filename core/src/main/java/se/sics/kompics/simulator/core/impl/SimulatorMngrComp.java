@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import se.sics.kompics.Channel;
 import se.sics.kompics.Component;
 import se.sics.kompics.ComponentDefinition;
+import se.sics.kompics.Fault;
 import se.sics.kompics.Handler;
 import se.sics.kompics.Init;
 import se.sics.kompics.Kill;
@@ -36,7 +37,6 @@ import se.sics.kompics.Positive;
 import se.sics.kompics.Start;
 import se.sics.kompics.config.Config;
 import se.sics.kompics.config.ConfigUpdate;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.network.Network;
 import se.sics.kompics.simulator.SimulationScenario;
@@ -51,7 +51,6 @@ import se.sics.kompics.simulator.network.identifier.DestinationHostSelector;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
-import se.sics.kompics.simulator.util.GlobalViewHandler;
 import se.sics.kompics.timer.Timer;
 
 /**
@@ -84,6 +83,12 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         subscribe(handleTerminateExperiment, simControlPort);
 
         defaultSetup();
+    }
+    
+    @Override
+    public Fault.ResolveAction handleFault(Fault fault) {
+        LOG.error("{}fault:{}", logPrefix, fault.getCause());
+        return Fault.ResolveAction.ESCALATE;
     }
 
     //**********CONTROL HANDLERS************************************************
