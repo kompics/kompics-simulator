@@ -31,6 +31,7 @@ import java.util.Random;
 import java.util.TimeZone;
 import javassist.ClassPool;
 import javassist.Loader;
+import javassist.LoaderClassPath;
 import javassist.Translator;
 import se.sics.kompics.ComponentDefinition;
 import se.sics.kompics.KompicsEvent;
@@ -56,6 +57,7 @@ import se.sics.kompics.simulator.adaptor.distributions.LongUniformDistribution;
 import se.sics.kompics.simulator.events.TakeSnapshot;
 import se.sics.kompics.simulator.instrumentation.CodeInterceptor;
 import se.sics.kompics.simulator.instrumentation.InstrumentationHelper;
+import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
 import se.sics.kompics.simulator.stochastic.events.StochasticProcessEvent;
 import se.sics.kompics.simulator.stochastic.events.StochasticProcessStartEvent;
 import se.sics.kompics.simulator.stochastic.events.StochasticProcessTerminatedEvent;
@@ -334,15 +336,21 @@ public abstract class SimulationScenario implements Serializable {
     
     public final void simulate(Class<? extends ComponentDefinition> main, Translator t) {
         InstrumentationHelper.store(this);
+        final ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
+        final ClassLoader fixedCL = new JarURLFixClassLoader(tcxtl);
+        final LoaderClassPath lcp = new LoaderClassPath(fixedCL);
+        final ClassPool cp = ClassPool.getDefault();
+        cp.insertClassPath(lcp);
+        
 
         try {
             Loader cl = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
                 @Override
                 public Loader run() {
-                    return new Loader();
+                    return new Loader(tcxtl, cp);
                 }
             });
-            cl.addTranslator(ClassPool.getDefault(), t);
+            cl.addTranslator(cp, t);
             Thread.currentThread().setContextClassLoader(cl);
             TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
             cl.run(main.getCanonicalName(), null);

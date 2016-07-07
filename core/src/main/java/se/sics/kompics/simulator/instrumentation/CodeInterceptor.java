@@ -20,17 +20,16 @@
  */
 package se.sics.kompics.simulator.instrumentation;
 
-import se.sics.kompics.simulator.core.SimulatorSystem;
 import java.io.File;
 import java.io.IOException;
 import java.util.StringTokenizer;
-
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 import javassist.Translator;
 import org.slf4j.Logger;
+import se.sics.kompics.simulator.core.SimulatorSystem;
 
 /**
  * The <code>CodeInterceptor</code> class.
@@ -63,6 +62,9 @@ public class CodeInterceptor implements Translator {
 
     @Override
     public void onLoad(ClassPool pool, String classname) throws NotFoundException, CannotCompileException {
+        if (classname.equalsIgnoreCase("org.codehaus.janino.ScriptEvaluator")) {
+            System.out.println(CodeInstrumentation.instrumentationExceptedClass);
+        }
         if (isException(pool, classname)) {
             return;
         }
@@ -82,7 +84,9 @@ public class CodeInterceptor implements Translator {
         String auxClassname = null;
         while (st.hasMoreTokens()) {
             auxClassname = (auxClassname == null ? st.nextToken() : auxClassname + "$" + st.nextToken());
+            //System.out.print("AuxClass: " + auxClassname);
             if (CodeInstrumentation.instrumentationExceptedClass.contains(auxClassname)) {
+                System.out.println("AuxClass: " + auxClassname + " is exception");
                 return true;
             }
         }

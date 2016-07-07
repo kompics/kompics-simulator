@@ -55,6 +55,8 @@ public class CodeInstrumentation {
         exceptions.add("org.mortbay.io.nio.SelectorManager$SelectSet");
         exceptions.add("org.apache.commons.math.stat.descriptive.SummaryStatistics");
         exceptions.add("org.apache.commons.math.stat.descriptive.DescriptiveStatistics");
+        exceptions.add("org.codehaus.janino.ScriptEvaluator");
+        exceptions.add("ch.qos.logback.core.boolex.JaninoEventEvaluatorBase");
         exceptions.add(P2pSimulator.class.getName());
         return exceptions;
     }
