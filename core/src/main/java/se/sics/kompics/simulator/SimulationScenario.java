@@ -103,7 +103,7 @@ public abstract class SimulationScenario implements Serializable {
         private StochasticProcessTerminatedEvent terminateEvent;
         private StochasticProcessEvent stochasticEvent;
         private Distribution<Long> interArrivalTime = null;
-        private final LinkedList<OperationGenerator> generators = new LinkedList<>();
+        protected final LinkedList<OperationGenerator> generators = new LinkedList<>();
         private final String name;
         private boolean started = false;
 
