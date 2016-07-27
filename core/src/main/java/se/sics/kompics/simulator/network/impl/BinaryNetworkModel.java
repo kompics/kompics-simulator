@@ -18,23 +18,42 @@
  */
 package se.sics.kompics.simulator.network.impl;
 
-import java.util.Set;
-
+import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
-/**
- * @author Alex Ormenisan <aaor@sics.se>
- */
-public class DisconnectedNodesNetworkModel extends BinaryNetworkModel {
+import java.util.Set;
 
-    public DisconnectedNodesNetworkModel(IdentifierExtractor idE, NetworkModel baseNM, Set<Identifier> disconnectedNodes) {
-        super(idE,baseNM, NetworkModels.withTotalLoss(), disconnectedNodes);
+/**
+ * @author Paris Carbone <parisc@kth.se>
+ */
+public class BinaryNetworkModel implements NetworkModel {
+
+    private final IdentifierExtractor idE;
+    private final NetworkModel firstNM;
+	private final NetworkModel secondNM;
+	private final Set<Identifier> selectedNodes;
+
+	public BinaryNetworkModel(IdentifierExtractor idE, NetworkModel firstNM, NetworkModel secondNM, Set<Identifier> selectedNodes) {
+        this.idE = idE;
+        this.firstNM = firstNM;
+		this.secondNM = secondNM;
+        this.selectedNodes = selectedNodes;
+    }
+
+    @Override
+    public long getLatencyMs(Msg message) {
+        Identifier srcId = idE.extract(message.getHeader().getSource());
+        Identifier dstId = idE.extract(message.getHeader().getDestination());
+        if (selectedNodes.contains(srcId) || selectedNodes.contains(dstId))  {
+            return secondNM.getLatencyMs(message);
+        }
+        return firstNM.getLatencyMs(message);
     }
 
     @Override
     public String toString() {
-        return "DisconnectedNodes NetworkModel";
+        return "Binary Network Model";
     }
 }

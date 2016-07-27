@@ -75,10 +75,13 @@ public abstract class SimulationScenario implements Serializable {
 
     private static final long serialVersionUID = 5278102582431240537L;
 
-    private static Random random = new Random(0l);
-    
+	private static long seed = 0l;
+	
+    private static Random random = new Random(seed);
+	
     public static void setSeed(long seed) {
-        random.setSeed(seed);
+		SimulationScenario.seed = seed; 
+        SimulationScenario.random.setSeed(SimulationScenario.seed);
     }
     
     public static Random getRandom() {
