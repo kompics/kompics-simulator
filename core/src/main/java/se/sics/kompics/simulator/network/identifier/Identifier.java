@@ -20,9 +20,11 @@
  */
 package se.sics.kompics.simulator.network.identifier;
 
+import java.io.Serializable;
+
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public interface Identifier {
+public interface Identifier extends Serializable {
     public int partition(int nrPartitions);
 }
