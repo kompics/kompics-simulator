@@ -25,6 +25,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.sics.kompics.ComponentDefinition;
+import se.sics.kompics.Fault;
+import se.sics.kompics.Fault.ResolveAction;
 import se.sics.kompics.Handler;
 import se.sics.kompics.Init;
 import se.sics.kompics.KompicsEvent;
@@ -33,29 +35,29 @@ import se.sics.kompics.Start;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.network.Network;
 import se.sics.kompics.simulator.SimulationScenario;
+import se.sics.kompics.simulator.core.Simulator;
+import se.sics.kompics.simulator.core.SimulatorComp;
+import se.sics.kompics.simulator.core.SimulatorControlPort;
+import se.sics.kompics.simulator.core.SimulatorPort;
+import se.sics.kompics.simulator.core.SimulatorSystem;
+import se.sics.kompics.simulator.events.TerminateExperiment;
+import se.sics.kompics.simulator.events.system.ChangeNetworkModelEvent;
+import se.sics.kompics.simulator.network.NetworkModel;
+import se.sics.kompics.simulator.scheduler.SimulationScheduler;
+import se.sics.kompics.simulator.stochastic.events.StochasticKompicsSimulatorEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticPeriodicSimulatorEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticProcessEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticProcessStartEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticProcessTerminatedEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticSimulationTerminatedEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticSimulatorEvent;
+import se.sics.kompics.simulator.stochastic.events.StochasticTakeSnapshotEvent;
 import se.sics.kompics.timer.CancelPeriodicTimeout;
 import se.sics.kompics.timer.CancelTimeout;
 import se.sics.kompics.timer.SchedulePeriodicTimeout;
 import se.sics.kompics.timer.ScheduleTimeout;
 import se.sics.kompics.timer.Timeout;
 import se.sics.kompics.timer.Timer;
-import se.sics.kompics.simulator.scheduler.SimulationScheduler;
-import se.sics.kompics.simulator.core.Simulator;
-import se.sics.kompics.simulator.core.SimulatorComp;
-import se.sics.kompics.simulator.core.SimulatorControlPort;
-import se.sics.kompics.simulator.core.SimulatorPort;
-import se.sics.kompics.simulator.core.SimulatorSystem;
-import se.sics.kompics.simulator.events.system.ChangeNetworkModelEvent;
-import se.sics.kompics.simulator.events.TerminateExperiment;
-import se.sics.kompics.simulator.network.NetworkModel;
-import se.sics.kompics.simulator.stochastic.events.StochasticKompicsSimulatorEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticPeriodicSimulatorEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticSimulationTerminatedEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticSimulatorEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticProcessEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticProcessStartEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticProcessTerminatedEvent;
-import se.sics.kompics.simulator.stochastic.events.StochasticTakeSnapshotEvent;
 
 /**
  * The <code>P2pSimulator</code> class.
@@ -112,6 +114,12 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         subscribe(handleCT, timer);
         subscribe(handleCPT, timer);
         subscribe(handleTerminate, simControlPort);
+    }
+    
+    @Override
+    public ResolveAction handleFault(Fault fault) {
+        LOG.error("{}fault:{}", logPrefix, fault.getCause());
+        return ResolveAction.ESCALATE;
     }
 
 //    public Pair<Long, Boolean> advanceSimulation(long milis) {

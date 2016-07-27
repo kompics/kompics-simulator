@@ -29,7 +29,6 @@ import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.expr.NewExpr;
-
 import org.slf4j.Logger;
 import se.sics.kompics.simulator.SimulationScenario;
 
@@ -73,6 +72,7 @@ public class BaseEditor extends ExprEditor {
             }
         } catch (NotFoundException | CannotCompileException ex) {
             LOG.error("instrumentation of:{} error:{}", new Object[]{constructorClass, ex.getMessage()});
+            ex.printStackTrace(System.err);
             throw new RuntimeException(ex);
         }
     }

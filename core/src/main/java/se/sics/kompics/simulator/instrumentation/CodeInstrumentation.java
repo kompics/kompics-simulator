@@ -47,6 +47,7 @@ public class CodeInstrumentation {
 
     public static Set<String> knownInterceptorExceptions() {
         Set<String> exceptions = new HashSet<>();
+        exceptions.add("se.sics.kompics.Kompics");
         exceptions.add("org.apache.log4j.PropertyConfigurator");
         exceptions.add("org.apache.log4j.helpers.FileWatchdog");
         exceptions.add("org.mortbay.thread.QueuedThreadPool");
@@ -54,6 +55,8 @@ public class CodeInstrumentation {
         exceptions.add("org.mortbay.io.nio.SelectorManager$SelectSet");
         exceptions.add("org.apache.commons.math.stat.descriptive.SummaryStatistics");
         exceptions.add("org.apache.commons.math.stat.descriptive.DescriptiveStatistics");
+        exceptions.add("org.codehaus.janino.ScriptEvaluator");
+        exceptions.add("ch.qos.logback.core.boolex.JaninoEventEvaluatorBase");
         exceptions.add(P2pSimulator.class.getName());
         return exceptions;
     }
