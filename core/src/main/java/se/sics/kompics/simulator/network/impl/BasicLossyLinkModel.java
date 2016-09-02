@@ -45,7 +45,7 @@ public class BasicLossyLinkModel implements NetworkModel {
         int lossChance = rand.nextInt(101);
         if(lossChance > (100 - lossRatePercentage)) {
 
-            System.out.println(" Choking the link .... ");
+//            System.out.println(" Choking the link .... ");
             return -1;
         }
         return baseNM.getLatencyMs(message);
