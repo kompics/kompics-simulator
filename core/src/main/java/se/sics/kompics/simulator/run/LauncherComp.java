@@ -18,11 +18,11 @@
  */
 package se.sics.kompics.simulator.run;
 
-import java.util.HashSet;
-import java.util.Set;
 import se.sics.kompics.Channel;
 import se.sics.kompics.Component;
 import se.sics.kompics.ComponentDefinition;
+import se.sics.kompics.Fault;
+import se.sics.kompics.FaultHandler;
 import se.sics.kompics.Kompics;
 import se.sics.kompics.network.Network;
 import se.sics.kompics.simulator.SimulationScenario;
@@ -32,23 +32,34 @@ import se.sics.kompics.simulator.core.impl.P2pSimulator;
 import se.sics.kompics.simulator.core.impl.P2pSimulator.P2pSimulatorInit;
 import se.sics.kompics.simulator.core.impl.SimulatorMngrComp;
 import se.sics.kompics.simulator.scheduler.BasicSimulationScheduler;
-import se.sics.kompics.simulator.util.GlobalViewHandler;
 import se.sics.kompics.timer.Timer;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class LauncherComp extends ComponentDefinition {
+    
     public static BasicSimulationScheduler simulatorScheduler = new BasicSimulationScheduler();
-
+    
+    public static final FaultHandler NO_CRASH_HANDLER = new FaultHandler() {
+        
+        @Override
+        public Fault.ResolveAction handle(Fault f) {
+            System.err.println("Fault in Kompics component escalated to root:\n" + f);
+            f.getCause().printStackTrace(System.err);
+            return Fault.ResolveAction.DESTROY;
+        }
+    };
+    
     public static void main(String[] args) {
+        Kompics.setFaultHandler(NO_CRASH_HANDLER);
         Kompics.setScheduler(simulatorScheduler);
         Kompics.createAndStart(LauncherComp.class, 1);
     }
     
     private final SimulationScenario scenario = SimulationScenario.load(System.getProperty("scenario"));
     
-    public LauncherComp(){
+    public LauncherComp() {
         Component simulator = create(P2pSimulator.class, new P2pSimulatorInit(simulatorScheduler, scenario, null));
         Component simManager = create(SimulatorMngrComp.class, new SimulatorMngrComp.SimulatorMngrInit());
         connect(simManager.getNegative(Network.class), simulator.getPositive(Network.class), Channel.TWO_WAY);
