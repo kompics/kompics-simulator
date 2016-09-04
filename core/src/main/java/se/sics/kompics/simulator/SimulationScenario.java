@@ -359,6 +359,8 @@ public abstract class SimulationScenario implements Serializable {
             cl.run(main.getCanonicalName(), null);
         } catch (Throwable e) {
             throw new RuntimeException("Exception caught during simulation", e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(tcxtl); // reset loader after simulation
         }
     }
 
