@@ -21,7 +21,6 @@
 package se.sics.kompics.simulator.util;
 
 import java.util.Map;
-import java.util.Set;
 import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 

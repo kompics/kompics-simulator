@@ -19,13 +19,9 @@
 
 package se.sics.kompics.simulator.events.system;
 
-import java.util.Set;
-import org.javatuples.Pair;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.events.SimulationEvent;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
-import se.sics.kompics.simulator.util.GlobalViewHandler;
 import se.sics.kompics.simulator.util.GlobalView;
 
 /**
