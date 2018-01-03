@@ -31,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SimulationResultSingleton implements SimulationResultMap {
 
-    public static SimulationResultMap instance = null;
+    private static SimulationResultMap instance = null;
 
     public synchronized static SimulationResultMap getInstance() {
         ClassLoader myClassLoader = SimulationResultSingleton.class.getClassLoader();
