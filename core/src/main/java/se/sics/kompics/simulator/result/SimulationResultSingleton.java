@@ -25,8 +25,9 @@ import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Freely adapted from <http://surguy.net/articles/communication-across-classloaders.xml>.
- * 
+ * Freely adapted from
+ * <http://surguy.net/articles/communication-across-classloaders.xml>.
+ * <p>
  * @author Lars Kroll <lkroll@kth.se>
  */
 public class SimulationResultSingleton implements SimulationResultMap {
@@ -36,7 +37,10 @@ public class SimulationResultSingleton implements SimulationResultMap {
     public synchronized static SimulationResultMap getInstance() {
         ClassLoader myClassLoader = SimulationResultSingleton.class.getClassLoader();
         if (instance == null) {
-            if (!myClassLoader.toString().startsWith("sun.")) {
+            String clName = myClassLoader.getClass().getName();
+            if (clName.startsWith("sun.") || clName.startsWith("sbt.")) {
+                instance = new SimulationResultSingleton();
+            } else {
                 try {
                     ClassLoader parentClassLoader = SimulationResultSingleton.class.getClassLoader().getParent();
                     Class otherClassInstance = parentClassLoader.loadClass(SimulationResultSingleton.class.getName());
@@ -48,8 +52,6 @@ public class SimulationResultSingleton implements SimulationResultMap {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            } else {
-                instance = new SimulationResultSingleton();
             }
         }
 
