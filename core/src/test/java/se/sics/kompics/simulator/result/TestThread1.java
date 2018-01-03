@@ -20,19 +20,23 @@
  */
 package se.sics.kompics.simulator.result;
 
-import org.junit.Test;
+import junit.framework.Assert;
+import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
-public class SimulationResultSingletonTest {
+public class TestThread1 implements Runnable {
 
-  @Test
-  public void test() throws InterruptedException {
-    Thread t1 = new Thread(new TestThread1());
-    Thread t2 = new Thread(new TestThread2());
-    t1.start();
-    Thread.sleep(1000);
-    t2.start();
+  public TestThread1() {
+    ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
+    ClassLoader fixedCL = new JarURLFixClassLoader(tcxtl);
+    Thread.currentThread().setContextClassLoader(fixedCL);
+  }
+
+  @Override
+  public void run() {
+    Assert.assertNull(SimulationResultSingleton.instance);
+    SimulationResultSingleton.getInstance().put("a", 1);
   }
 }
