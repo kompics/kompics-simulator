@@ -20,8 +20,14 @@
  */
 package se.sics.kompics.simulator.result;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import javassist.ClassPool;
+import javassist.Loader;
+import javassist.LoaderClassPath;
 import junit.framework.Assert;
 import org.junit.Test;
+import se.sics.kompics.simulator.instrumentation.CodeInterceptor;
 import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
 
 /**
@@ -29,17 +35,48 @@ import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
  */
 public class SimulationResultSingletonTest {
 
-  @Test
-  public void test() throws InterruptedException {
-    ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
-    ClassLoader fixedCL1 = new JarURLFixClassLoader(tcxtl);
-    ClassLoader fixedCL2 = new JarURLFixClassLoader(tcxtl);
-    Thread.currentThread().setContextClassLoader(fixedCL1);
-    Thread t1 = new Thread(new TestThread1(fixedCL2));
-    t1.start();
-    Thread.sleep(1000);
-    Thread.currentThread().setContextClassLoader(fixedCL1);
-    
-    Assert.assertNull(SimulationResultSingleton.instance);
-  }
+    @Test
+    public void test() throws InterruptedException {
+        Assert.assertNull(SimulationResultSingleton.instance);
+        SimulationResultMap m = SimulationResultSingleton.getInstance();
+        Assert.assertNotNull(SimulationResultSingleton.instance);
+        Thread t1 = new Thread(new TestThread1());
+        t1.start();
+        Thread.sleep(1000);
+        int res = m.get("a", Integer.class);
+        Assert.assertEquals(1, res);
+    }
+
+    public static class TestThread1 implements Runnable {
+
+        public TestThread1() {
+        }
+
+        @Override
+        public void run() {
+            final ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
+            final ClassLoader fixedCL = new JarURLFixClassLoader(tcxtl);
+            final LoaderClassPath lcp = new LoaderClassPath(fixedCL);
+            final ClassPool cp = ClassPool.getDefault();
+            cp.insertClassPath(lcp);
+
+            try {
+                Loader cl = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
+                    @Override
+                    public Loader run() {
+                        return new Loader(tcxtl, cp);
+                    }
+                });
+                cl.addTranslator(cp, new CodeInterceptor(null, false));
+                Thread.currentThread().setContextClassLoader(cl);
+                cl.run(TestMain.class.getCanonicalName(), null);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            } finally {
+                Thread.currentThread().setContextClassLoader(tcxtl); // reset loader after simulation
+            }
+
+        }
+    }
+
 }
