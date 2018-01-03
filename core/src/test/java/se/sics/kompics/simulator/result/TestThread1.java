@@ -20,23 +20,44 @@
  */
 package se.sics.kompics.simulator.result;
 
-import junit.framework.Assert;
-import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
 public class TestThread1 implements Runnable {
 
-  public TestThread1() {
-    ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
-    ClassLoader fixedCL = new JarURLFixClassLoader(tcxtl);
-    Thread.currentThread().setContextClassLoader(fixedCL);
+  ClassLoader cl;
+
+  public TestThread1(ClassLoader cl) {
+    this.cl = cl;
   }
 
   @Override
   public void run() {
-    Assert.assertNull(SimulationResultSingleton.instance);
-    SimulationResultSingleton.getInstance().put("a", 1);
+    Thread.currentThread().setContextClassLoader(cl);
+    try {
+      Class otherClassInstance = cl.loadClass(SimulationResultSingleton.class.getName());
+      Method m1 = otherClassInstance.getMethod("getInstance");
+      Object instance = m1.invoke(null);
+      Method m2 = otherClassInstance.getMethod("put", String.class, Object.class);
+      m2.invoke(instance, "a", 1);
+    } catch (ClassNotFoundException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (NoSuchMethodException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SecurityException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IllegalAccessException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (IllegalArgumentException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (InvocationTargetException ex) {
+      Logger.getLogger(TestThread1.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
   }
 }
