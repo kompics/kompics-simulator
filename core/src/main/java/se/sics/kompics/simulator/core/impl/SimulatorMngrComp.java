@@ -24,17 +24,7 @@ import java.util.Set;
 import org.javatuples.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.sics.kompics.Channel;
-import se.sics.kompics.Component;
-import se.sics.kompics.ComponentDefinition;
-import se.sics.kompics.Fault;
-import se.sics.kompics.Handler;
-import se.sics.kompics.Init;
-import se.sics.kompics.Kill;
-import se.sics.kompics.Kompics;
-import se.sics.kompics.Negative;
-import se.sics.kompics.Positive;
-import se.sics.kompics.Start;
+import se.sics.kompics.*;
 import se.sics.kompics.config.Config;
 import se.sics.kompics.config.ConfigUpdate;
 import se.sics.kompics.network.Msg;
@@ -71,6 +61,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
     private final GlobalViewImpl globalView;
     private IdentifierExtractor idE;
     private Map<Identifier, Pair<Component, Channel[]>> systemNodes = new HashMap<>();
+    private Map<Component, Pair<Component, Channel[]>> dyingNodes = new HashMap<>();
 
     public SimulatorMngrComp(SimulatorMngrInit init) {
         LOG.info("{}initiating...", logPrefix);
@@ -80,6 +71,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         subscribe(handleSetup, simPort);
         subscribe(handleStartNode, simPort);
         subscribe(handleKillNode, simPort);
+        subscribe(handleKilledNode, control);
         subscribe(handleTerminateExperiment, simControlPort);
 
         defaultSetup();
@@ -172,10 +164,26 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
                 throw new RuntimeException("node does not exist");
             }
             globalView.killNode(idE.extract(killNode.getNodeAddress()));
+            LOG.debug("skipping disconnecting channels");
+            dyingNodes.put(node.getValue0(), node);
+            //disconnect(node.getValue1()[0]);
+            //disconnect(node.getValue1()[1]);
+            trigger(Kill.event, node.getValue0().control());
+        }
+    };
+
+    private Handler handleKilledNode = new Handler<Killed>() {
+
+        @Override
+        public void handle(Killed killedNode) {
+            LOG.debug("Received Killed from {}, about to disconnect channels", killedNode.component);
+            Pair<Component, Channel[]> node = dyingNodes.get(killedNode.component);
+            if (node == null) {
+                throw new RuntimeException("node was never dying");
+            }
             disconnect(node.getValue1()[0]);
             disconnect(node.getValue1()[1]);
-            trigger(Kill.event, node.getValue0().control());
-            
+            dyingNodes.remove(node.getValue0());
         }
     };
 
