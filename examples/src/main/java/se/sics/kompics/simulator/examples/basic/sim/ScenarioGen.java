@@ -24,59 +24,58 @@ import se.sics.kompics.simulator.adaptor.Operation1;
 import se.sics.kompics.simulator.adaptor.distributions.extra.BasicIntSequentialDistribution;
 import se.sics.kompics.simulator.events.system.StartNodeEvent;
 import se.sics.kompics.simulator.examples.basic.BasicPingComp;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class ScenarioGen {
 
-    static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
+  static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
+
+    @Override
+    public StartNodeEvent generate(final Integer node) {
+      return new StartNodeEvent() {
+        Address selfAdr;
+        Address pingAdr;
+
+        {
+          selfAdr = ScenarioSetup.nodeAddressMap.get(node);
+          pingAdr = ScenarioSetup.nodePing.get(node);
+        }
 
         @Override
-        public StartNodeEvent generate(final Integer node) {
-            return new StartNodeEvent<BasicPingComp>() {
-                Address selfAdr;
-                Address pingAdr;
-                {
-                    selfAdr = ScenarioSetup.nodeAddressMap.get(node);
-                    pingAdr = ScenarioSetup.nodePing.get(node);
-                }
-                
-                @Override
-                public Identifier getNodeId() {
-                    return ((Identifiable)selfAdr).getId();
-                }
-
-                @Override
-                public Class getComponentDefinition() {
-                    return BasicPingComp.class;
-                }
-
-                @Override
-                public BasicPingComp.BasicPingInit getComponentInit() {
-                    return new BasicPingComp.BasicPingInit(selfAdr, pingAdr);
-                }
-            };
+        public Address getNodeAddress() {
+          return selfAdr;
         }
-    };
 
-    public static SimulationScenario simplePing() {
-        SimulationScenario scen = new SimulationScenario() {
-            {
-                StochasticProcess startPeers = new StochasticProcess() {
-                    {
-                        eventInterArrivalTime(constant(1000));
-                        raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
-                    }
-                };
+        @Override
+        public Class getComponentDefinition() {
+          return BasicPingComp.class;
+        }
 
-                startPeers.start();
-                terminateAfterTerminationOf(20000, startPeers);
-            }
+        @Override
+        public BasicPingComp.BasicPingInit getComponentInit() {
+          return new BasicPingComp.BasicPingInit(selfAdr, pingAdr);
+        }
+      };
+    }
+  };
+
+  public static SimulationScenario simplePing() {
+    SimulationScenario scen = new SimulationScenario() {
+      {
+        StochasticProcess startPeers = new StochasticProcess() {
+          {
+            eventInterArrivalTime(constant(1000));
+            raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
+          }
         };
 
-        return scen;
-    }
+        startPeers.start();
+        terminateAfterTerminationOf(20000, startPeers);
+      }
+    };
+
+    return scen;
+  }
 }

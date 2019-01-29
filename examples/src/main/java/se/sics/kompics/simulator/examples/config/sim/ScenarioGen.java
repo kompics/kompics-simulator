@@ -26,70 +26,64 @@ import se.sics.kompics.simulator.adaptor.Operation1;
 import se.sics.kompics.simulator.adaptor.distributions.extra.BasicIntSequentialDistribution;
 import se.sics.kompics.simulator.events.system.StartNodeEvent;
 import se.sics.kompics.simulator.examples.config.ConfigReadingComp;
-import se.sics.kompics.simutil.identifiable.Identifiable;
-import se.sics.kompics.simutil.identifiable.Identifier;
-import se.sics.kompics.simutil.identifiable.impl.IntIdentifier;
 
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class ScenarioGen {
 
-    static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
+  static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
+
+    @Override
+    public StartNodeEvent generate(final Integer node) {
+      return new StartNodeEvent() {
+        Address selfAdr;
+
+        {
+          selfAdr = ScenarioSetup.nodeAddressMap.get(node);
+        }
 
         @Override
-        public StartNodeEvent generate(final Integer node) {
-            return new StartNodeEvent<ConfigReadingComp>() {
-                Address selfAdr;
-
-                {
-                    selfAdr = ScenarioSetup.nodeAddressMap.get(node);
-                }
-
-                @Override
-                public Identifier getNodeId() {
-                    return ((Identifiable) selfAdr).getId();
-                }
-
-                @Override
-                public Class getComponentDefinition() {
-                    return ConfigReadingComp.class;
-                }
-
-                @Override
-                public ConfigReadingComp.ConfigReadingInit getComponentInit() {
-                    return new ConfigReadingComp.ConfigReadingInit();
-                }
-
-                @Override
-                public Map<String, Object> initConfigUpdate() {
-                    Map<String, Object> nodeConfig = new HashMap<>();
-                    Integer nodeId = ((Identifiable<IntIdentifier>) selfAdr).getId().id;
-                    nodeConfig.put("system.id", nodeId);
-                    if (nodeId % 2 == 0) {
-                        nodeConfig.put("example.val", "value is" + nodeId);
-                    }
-                    return nodeConfig;
-                }
-            };
+        public Address getNodeAddress() {
+          return selfAdr;
         }
-    };
 
-    public static SimulationScenario simpleBoot() {
-        SimulationScenario scen = new SimulationScenario() {
-            {
-                StochasticProcess startPeers = new StochasticProcess() {
-                    {
-                        eventInterArrivalTime(constant(1000));
-                        raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
-                    }
-                };
+        @Override
+        public Class getComponentDefinition() {
+          return ConfigReadingComp.class;
+        }
 
-                startPeers.start();
-                terminateAfterTerminationOf(20000, startPeers);
-            }
+        @Override
+        public ConfigReadingComp.ConfigReadingInit getComponentInit() {
+          return new ConfigReadingComp.ConfigReadingInit();
+        }
+
+        @Override
+        public Map<String, Object> initConfigUpdate() {
+          Map<String, Object> nodeConfig = new HashMap<>();
+          nodeConfig.put("system.id", selfAdr.hashCode());
+          nodeConfig.put("example.val", "port is" + selfAdr.getPort());
+          return nodeConfig;
+        }
+      };
+    }
+  };
+
+  public static SimulationScenario simpleBoot() {
+    SimulationScenario scen = new SimulationScenario() {
+      {
+        StochasticProcess startPeers = new StochasticProcess() {
+          {
+            eventInterArrivalTime(constant(1000));
+            raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
+          }
         };
 
-        return scen;
-    }
+        startPeers.start();
+        terminateAfterTerminationOf(20000, startPeers);
+      }
+    };
+
+    return scen;
+  }
 }

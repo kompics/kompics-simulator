@@ -1,7 +1,7 @@
 /*
  * This file is part of the Kompics Simulator.
  *
- * Copyright (C) 2009 Swedish Institute of Computer Science (SICS) 
+ * Copyright (C) 2009 Swedish Institute of Computer Science (SICS)
  * Copyright (C) 2009 Royal Institute of Technology (KTH)
  *
  * This program is free software; you can redistribute it and/or
@@ -20,8 +20,6 @@
  */
 package se.sics.kompics.simulator.examples.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import se.sics.kompics.ComponentDefinition;
 import se.sics.kompics.Handler;
 import se.sics.kompics.Init;
@@ -34,27 +32,23 @@ import se.sics.kompics.timer.Timer;
  * @author Alex Ormenisan <aaor@kth.se>
  */
 public class ConfigReadingComp extends ComponentDefinition {
-    private static final Logger LOG = LoggerFactory.getLogger(ConfigReadingComp.class);
-    private String logPrefix;
 
-    private final Positive network = requires(Network.class);
-    private final Positive timer = requires(Timer.class);
-    
-    public ConfigReadingComp(ConfigReadingInit init) {
-        logPrefix = "<nid:" + config().getValue("system.id", Integer.class) + "> ";
-        LOG.info("{}initiating...", logPrefix);
+  private final Positive network = requires(Network.class);
+  private final Positive timer = requires(Timer.class);
 
-        subscribe(handleStart, control); 
+  public ConfigReadingComp(ConfigReadingInit init) {
+    loggingCtxPutAlways("nId", config().getValue("system.id", Integer.class).toString());
+
+    subscribe(handleStart, control);
+  }
+
+  Handler handleStart = new Handler<Start>() {
+    @Override
+    public void handle(Start event) {
+      logger.info("config value:{} with default(reference)", config().getValue("example.val", String.class));
     }
-    
-    private Handler handleStart = new Handler<Start>() {
-        @Override
-        public void handle(Start event) {
-            LOG.info("{}starting...", logPrefix);
-            LOG.info("{}config value:{} with default(reference)", logPrefix, config().getValue("example.val", String.class));
-        }
-    };
-    
-    public static class ConfigReadingInit extends Init<ConfigReadingComp> {
-    }
+  };
+
+  public static class ConfigReadingInit extends Init<ConfigReadingComp> {
+  }
 }

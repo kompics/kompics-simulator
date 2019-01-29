@@ -11,14 +11,13 @@ package se.sics.kompics.simulator.examples.basic.sim;
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
 import org.junit.Test;
 import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.run.LauncherComp;
@@ -27,11 +26,12 @@ import se.sics.kompics.simulator.run.LauncherComp;
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class BasicPingTest {
-    @Test
-    public void simpleBoot() {
-        long seed = 123;
-        SimulationScenario.setSeed(seed);
-        SimulationScenario simpleBootScenario = ScenarioGen.simplePing();
-        simpleBootScenario.simulate(LauncherComp.class);
-    }
+
+  @Test
+  public void simpleBoot() {
+    long seed = 123;
+    SimulationScenario.setSeed(seed);
+    SimulationScenario simpleBootScenario = ScenarioGen.simplePing();
+    simpleBootScenario.simulate(LauncherComp.class);
+  }
 }

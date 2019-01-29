@@ -4,11 +4,13 @@
     <!-- encoders are assigned the type
          ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %logger{1} [%thread] %X %n    - %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %logger{100} [%thread] %X %n    - %msg%n</pattern>
     </encoder>
   </appender>
 
-  <root level="debug">
-    <appender-ref ref="STDOUT" />
-  </root>
+  <logger name="se.sics.kompics.simulator.core.impl"   level="info" additivity="false"><appender-ref ref="STDOUT" /></logger>
+  <logger name="se.sics.kompics.simulator.run"         level="info" additivity="false"><appender-ref ref="STDOUT" /></logger>
+  <logger name="se.sics.kompics.simulator.examples"    level="debug" additivity="false"><appender-ref ref="STDOUT" /></logger>
+  
+  <root level="debug"> <appender-ref ref="STDOUT" /> </root>
 </configuration>
