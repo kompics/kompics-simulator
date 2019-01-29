@@ -36,7 +36,7 @@
         <kompics.version>1.0.0</kompics.version>
         
         <javaassist.version>3.24.1-GA</javaassist.version>
-        <junit.version>4.5</junit.version>
+        <junit.version>4.12</junit.version>
         <tuples.version>1.2</tuples.version>
     </properties>
 
@@ -86,7 +86,7 @@
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.6.1</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${java.compiler.version}</source>

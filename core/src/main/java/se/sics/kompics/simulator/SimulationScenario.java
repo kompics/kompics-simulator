@@ -353,6 +353,9 @@ public abstract class SimulationScenario implements Serializable {
                     return new Loader(tcxtl, cp);
                 }
             });
+            cl.delegateLoadingOf("jdk.internal.misc.Unsafe");
+            cl.delegateLoadingOf("jdk.internal.reflect.MethodAccessorImpl"); // needed for Mockito#mock
+            cl.delegateLoadingOf("jdk.internal.reflect.SerializationConstructorAccessorImpl"); 
             cl.addTranslator(cp, t);
             Thread.currentThread().setContextClassLoader(cl);
             TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
