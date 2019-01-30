@@ -3,7 +3,7 @@
     <groupId>se.sics.kompics.simulator</groupId>
     <artifactId>kompics-simulator-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>Kompics Simulator</name>
     <url>http://kompics.sics.se</url>
@@ -25,18 +25,19 @@
     <modules>
         <module>core</module>
         <!--<module>examples</module>-->
+        <module>examples</module>
     </modules>
 
     <properties>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <java.compiler.version>${java.version}</java.compiler.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kompics.version>1.0.0</kompics.version>
         
-        <javaassist.version>3.20.0-GA</javaassist.version>
-        <junit.version>4.5</junit.version>
+        <javaassist.version>3.24.1-GA</javaassist.version>
+        <junit.version>4.12</junit.version>
         <tuples.version>1.2</tuples.version>
     </properties>
 
@@ -86,7 +87,7 @@
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
+                <version>3.6.1</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${java.compiler.version}</source>

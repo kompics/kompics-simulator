@@ -67,7 +67,7 @@ public class JarURLFixClassLoader extends ClassLoader {
                     //System.out.println("is: " + is);
                     return is;
                 } else {
-                    System.err.println("Couldn't get a proper input stream...dunno why -.- ");
+                    //System.err.println("Couldn't get a proper input stream...dunno why -.- ");
                     return null;
                 }
             } else {                 

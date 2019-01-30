@@ -38,7 +38,7 @@ public class SimulationResultSingleton implements SimulationResultMap {
         ClassLoader myClassLoader = SimulationResultSingleton.class.getClassLoader();
         if (instance == null) {
             String clName = myClassLoader.getClass().getName();
-            if (clName.startsWith("sun.") || clName.startsWith("sbt.")) {
+            if (clName.startsWith("sun.") || clName.startsWith("sbt.") || clName.startsWith("jdk.internal")) {
                 instance = new SimulationResultSingleton();
             } else {
                 try {
