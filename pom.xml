@@ -29,7 +29,7 @@
     </modules>
 
     <properties>
-        <java.version>1.10</java.version>
+        <java.version>1.8</java.version>
         <java.compiler.version>${java.version}</java.compiler.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
