@@ -1,6 +1,8 @@
 language: java
 dist: trusty
-install: mvn install -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version --settings .travis.settings.xml
+install: 
+  - "cp .travis.settings.xml $HOME/.m2/settings.xml"
+  - "mvn install -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version"
 jdk:
   - oraclejdk8
   - oraclejdk9
