@@ -87,7 +87,7 @@
                 <inherited>true</inherited>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.8.0</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <source>${java.compiler.version}</source>
@@ -98,30 +98,21 @@
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <locales>en</locales>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
+                        <phase>package</phase>
+                        <goals><goal>jar-no-fork</goal></goals>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>3.0.1</version>
                 <executions>
                     <!-- <execution> <id>attach-javadoc</id> <phase>verify</phase> <goals> 
                     <goal>jar</goal> </goals> </execution> -->
@@ -159,12 +150,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
-                <configuration>
-                    <useReleaseProfile>false</useReleaseProfile>
-                    <releaseProfiles>release</releaseProfiles>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
+                <version>2.4.2</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -174,14 +160,6 @@
                 </configuration>
             </plugin>
         </plugins>
-
-        <extensions>
-            <extension>
-                <groupId>org.apache.maven.wagon</groupId>
-                <artifactId>wagon-ssh-external</artifactId>
-                <version>1.0-beta-6</version>
-            </extension>
-        </extensions>
     </build>
 
     <reporting>
@@ -189,7 +167,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.6.1</version>
+                <version>3.0.1</version>
             </plugin>
             <plugin>
                 <inherited>true</inherited>
@@ -204,30 +182,13 @@
         </plugins>
     </reporting>
 
-    <repositories>
+    <distributionManagement>
         <repository>
-            <id>sics-release</id>
-            <name>SICS Release Repository</name>
-            <url>http://kompics.sics.se/maven/repository</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
+            <id>bintray-kompics-Maven</id>
+            <name>kompics-Maven</name>
+            <url>https://api.bintray.com/maven/kompics/Maven/kompics-simulator/;publish=1</url>
         </repository>
-        <repository>
-            <id>sics-snapshot</id>
-            <name>SICS Snapshot Repository</name>
-            <url>http://kompics.sics.se/maven/snapshotrepository</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    </distributionManagement>
 
     <scm>
         <connection>scm:git:https://github.com/kompics/kompics.git</connection>
@@ -235,24 +196,6 @@
         <url>https://github.com/kompics/kompics</url>
         <tag>HEAD</tag>
     </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>sics-release-repository</id>
-            <name>SICS Repository</name>
-            <url>scpexe://kompics.i.sics.se/home/maven/repository</url>
-        </repository>
-        <snapshotRepository>
-            <id>sics-snapshot-repository</id>
-            <name>SICS Snapshot Repository</name>
-            <url>scpexe://kompics.i.sics.se/home/maven/snapshotrepository</url>
-        </snapshotRepository>
-        <site>
-            <id>kompics-site</id>
-            <url>scpexe://kompics.i.sics.se/var/www/kompics/report/trunk</url>
-        </site>
-        <downloadUrl>http://kompics.i.sics.se/maven/repository</downloadUrl>
-    </distributionManagement>
 
     <mailingLists>
         <mailingList>
