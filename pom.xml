@@ -34,7 +34,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kompics.version>1.0.0</kompics.version>
+        <kompics.version>1.0.1</kompics.version>
         
         <javaassist.version>3.24.1-GA</javaassist.version>
         <junit.version>4.12</junit.version>
