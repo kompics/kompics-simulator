@@ -75,19 +75,19 @@ public abstract class SimulationScenario implements Serializable {
 
     private static final long serialVersionUID = 5278102582431240537L;
 
-	private static long seed = 0l;
-	
+    private static long seed = 0l;
+
     private static Random random = new Random(seed);
-	
+
     public static void setSeed(long seed) {
-		SimulationScenario.seed = seed; 
+        SimulationScenario.seed = seed;
         SimulationScenario.random.setSeed(SimulationScenario.seed);
     }
-    
+
     public static Random getRandom() {
         return random;
     }
-    
+
     private final LinkedList<StochasticProcess> processes = new LinkedList<>();
     private int processCount;
     private StochasticSimulationTerminatedEvent terminatedEvent;
@@ -127,61 +127,56 @@ public abstract class SimulationScenario implements Serializable {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op), count);
             generators.add(generator);
         }
 
-        protected final <E extends KompicsEvent, P1 extends Number> void raise(
-                int count, Operation1<E, P1> op1, Distribution<P1> d1) {
+        protected final <E extends KompicsEvent, P1 extends Number> void raise(int count, Operation1<E, P1> op1,
+                Distribution<P1> d1) {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op1, d1), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op1, d1), count);
             generators.add(generator);
         }
 
-        protected final <E extends KompicsEvent, P1 extends Number, P2 extends Number> void raise(
-                int count, Operation2<E, P1, P2> op2, Distribution<P1> d1, Distribution<P2> d2) {
+        protected final <E extends KompicsEvent, P1 extends Number, P2 extends Number> void raise(int count,
+                Operation2<E, P1, P2> op2, Distribution<P1> d1, Distribution<P2> d2) {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op2, d1, d2), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op2, d1, d2), count);
             generators.add(generator);
         }
 
         protected final <E extends KompicsEvent, P1 extends Number, P2 extends Number, P3 extends Number> void raise(
-                int count, Operation3<E, P1, P2, P3> op3, Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3) {
+                int count, Operation3<E, P1, P2, P3> op3, Distribution<P1> d1, Distribution<P2> d2,
+                Distribution<P3> d3) {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op3, d1, d2, d3), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op3, d1, d2, d3), count);
             generators.add(generator);
         }
 
         protected final <E extends KompicsEvent, P1 extends Number, P2 extends Number, P3 extends Number, P4 extends Number, P5 extends Number> void raise(
-                int count, Operation4<E, P1, P2, P3, P4> op4,
-                Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3, Distribution<P4> d4) {
+                int count, Operation4<E, P1, P2, P3, P4> op4, Distribution<P1> d1, Distribution<P2> d2,
+                Distribution<P3> d3, Distribution<P4> d4) {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op4, d1, d2, d3, d4), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op4, d1, d2, d3, d4), count);
             generators.add(generator);
         }
 
         protected final <E extends KompicsEvent, P1 extends Number, P2 extends Number, P3 extends Number, P4 extends Number, P5 extends Number> void raise(
-                int count, Operation5<E, P1, P2, P3, P4, P5> op5,
-                Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3,
-                Distribution<P4> d4, Distribution<P5> d5) {
+                int count, Operation5<E, P1, P2, P3, P4, P5> op5, Distribution<P1> d1, Distribution<P2> d2,
+                Distribution<P3> d3, Distribution<P4> d4, Distribution<P5> d5) {
             if (count <= 0) {
                 throw new RuntimeException("Number of raised events must be strictly positive");
             }
-            OperationGenerator generator = new OperationGenerator(
-                    new ConcreteOperation<>(op5, d1, d2, d3, d4, d5), count);
+            OperationGenerator generator = new OperationGenerator(new ConcreteOperation<>(op5, d1, d2, d3, d4, d5),
+                    count);
             generators.add(generator);
         }
 
@@ -189,12 +184,10 @@ public abstract class SimulationScenario implements Serializable {
             relativeStartTime = false;
             startTime = 0;
             started = true;
-            terminateEvent = new StochasticProcessTerminatedEvent(0,
-                    new LinkedList<StochasticProcessStartEvent>(), name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime,
-                    terminateEvent, generators, name);
-            startEvent = new StochasticProcessStartEvent(startTime,
-                    new LinkedList<StochasticProcessStartEvent>(),
+            terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
+                    name);
+            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
 
             processes.remove(this);
@@ -205,12 +198,10 @@ public abstract class SimulationScenario implements Serializable {
             relativeStartTime = false;
             startTime = time;
             started = true;
-            terminateEvent = new StochasticProcessTerminatedEvent(0,
-                    new LinkedList<StochasticProcessStartEvent>(), name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime,
-                    terminateEvent, generators, name);
-            startEvent = new StochasticProcessStartEvent(startTime,
-                    new LinkedList<StochasticProcessStartEvent>(),
+            terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
+                    name);
+            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
 
             processes.remove(this);
@@ -221,12 +212,10 @@ public abstract class SimulationScenario implements Serializable {
             relativeStartTime = true;
             started = true;
             startTime = 0;
-            terminateEvent = new StochasticProcessTerminatedEvent(0,
-                    new LinkedList<StochasticProcessStartEvent>(), name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime,
-                    terminateEvent, generators, name);
-            startEvent = new StochasticProcessStartEvent(startTime,
-                    new LinkedList<StochasticProcessStartEvent>(),
+            terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
+                    name);
+            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
             // we hook this process' start event to the referenced process'
             // list of start events
@@ -243,12 +232,10 @@ public abstract class SimulationScenario implements Serializable {
             relativeStartTime = true;
             started = true;
             startTime = delay;
-            terminateEvent = new StochasticProcessTerminatedEvent(0,
-                    new LinkedList<StochasticProcessStartEvent>(), name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime,
-                    terminateEvent, generators, name);
-            startEvent = new StochasticProcessStartEvent(startTime,
-                    new LinkedList<StochasticProcessStartEvent>(),
+            terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
+                    name);
+            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
             // we hook this process' start event to the referenced process'
             // list of start events
@@ -261,17 +248,14 @@ public abstract class SimulationScenario implements Serializable {
             processes.add(this);
         }
 
-        public final void startAfterTerminationOf(long delay,
-                StochasticProcess... process) {
+        public final void startAfterTerminationOf(long delay, StochasticProcess... process) {
             relativeStartTime = true;
             started = true;
             startTime = delay;
-            terminateEvent = new StochasticProcessTerminatedEvent(0,
-                    new LinkedList<StochasticProcessStartEvent>(), name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime,
-                    terminateEvent, generators, name);
-            startEvent = new StochasticProcessStartEvent(startTime,
-                    new LinkedList<StochasticProcessStartEvent>(),
+            terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
+                    name);
+            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, process.length, name);
             // we hook this process' start event to the referenced process'
             // list of start events
@@ -287,7 +271,7 @@ public abstract class SimulationScenario implements Serializable {
             processes.add(this);
         }
     }
-    
+
     protected final void terminateAt(long time) {
         StochasticSimulationTerminatedEvent terminationEvent = new StochasticSimulationTerminatedEvent(time, 0, false);
         terminatedEvent = terminationEvent;
@@ -295,8 +279,8 @@ public abstract class SimulationScenario implements Serializable {
 
     protected final void terminateAfterTerminationOf(long delay, StochasticProcess... process) {
         HashSet<StochasticProcess> procs = new HashSet<>(Arrays.asList(process));
-        StochasticSimulationTerminatedEvent terminationEvent = new StochasticSimulationTerminatedEvent(
-                delay, procs.size(), true);
+        StochasticSimulationTerminatedEvent terminationEvent = new StochasticSimulationTerminatedEvent(delay,
+                procs.size(), true);
         terminatedEvent = terminationEvent;
         for (StochasticProcess stochasticProcess : procs) {
             if (!stochasticProcess.started) {
@@ -305,7 +289,7 @@ public abstract class SimulationScenario implements Serializable {
             stochasticProcess.terminateEvent.setTerminationEvent(terminationEvent);
         }
     }
-    
+
     protected final static class Snapshot {
 
         private final TakeSnapshot takeSnapshotEvent;
@@ -316,27 +300,27 @@ public abstract class SimulationScenario implements Serializable {
 
         public void takeAfterTerminationOf(long delay, StochasticProcess... process) {
             HashSet<StochasticProcess> procs = new HashSet<>(Arrays.asList(process));
-            StochasticTakeSnapshotEvent snapshotEvent = new StochasticTakeSnapshotEvent(delay,
-                    takeSnapshotEvent, procs.size());
+            StochasticTakeSnapshotEvent snapshotEvent = new StochasticTakeSnapshotEvent(delay, takeSnapshotEvent,
+                    procs.size());
             for (StochasticProcess stochasticProcess : procs) {
                 stochasticProcess.terminateEvent.setSnapshotEvent(snapshotEvent);
             }
         }
     }
-    
+
     protected final Snapshot snapshot(TakeSnapshot takeSnapshotEvent) {
         return new Snapshot(takeSnapshotEvent);
     }
 
-    //**************************************************************************
+    // **************************************************************************
     public final void simulate(Class<? extends ComponentDefinition> main) {
         simulate(main, new CodeInterceptor(null, false));
     }
-    
+
     public final void simulate(Class<? extends ComponentDefinition> main, boolean allowThreads) {
         simulate(main, new CodeInterceptor(null, allowThreads));
     }
-    
+
     public final void simulate(Class<? extends ComponentDefinition> main, Translator t) {
         InstrumentationHelper.store(this);
         final ClassLoader tcxtl = Thread.currentThread().getContextClassLoader();
@@ -344,7 +328,6 @@ public abstract class SimulationScenario implements Serializable {
         final LoaderClassPath lcp = new LoaderClassPath(fixedCL);
         final ClassPool cp = ClassPool.getDefault();
         cp.insertClassPath(lcp);
-        
 
         try {
             Loader cl = AccessController.doPrivileged(new PrivilegedAction<Loader>() {
@@ -355,7 +338,7 @@ public abstract class SimulationScenario implements Serializable {
             });
             cl.delegateLoadingOf("jdk.internal.misc.Unsafe");
             cl.delegateLoadingOf("jdk.internal.reflect.MethodAccessorImpl"); // needed for Mockito#mock
-            cl.delegateLoadingOf("jdk.internal.reflect.SerializationConstructorAccessorImpl"); 
+            cl.delegateLoadingOf("jdk.internal.reflect.SerializationConstructorAccessorImpl");
             cl.addTranslator(cp, t);
             Thread.currentThread().setContextClassLoader(cl);
             TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
@@ -370,7 +353,8 @@ public abstract class SimulationScenario implements Serializable {
     public static SimulationScenario load(String scenarioFile) {
         return InstrumentationHelper.load(scenarioFile);
     }
-    //**************************************************************************
+
+    // **************************************************************************
     public final LinkedList<StochasticSimulatorEvent> generateEventList() {
         LinkedList<StochasticSimulatorEvent> eventList = new LinkedList<>();
         int started = 0;
@@ -388,7 +372,7 @@ public abstract class SimulationScenario implements Serializable {
         }
         return eventList;
     }
-    
+
     protected final Distribution<Double> constant(double value) {
         return new ConstantDistribution<>(Double.class, value);
     }

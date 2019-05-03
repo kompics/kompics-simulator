@@ -54,7 +54,7 @@ public class BaseEditor extends ExprEditor {
     public void edit(NewExpr newExpr) {
         String constructorClass = newExpr.getClassName();
         try {
-            CtClass callingClass = newExpr.getEnclosingClass();
+            // CtClass callingClass = newExpr.getEnclosingClass();
             CtClass[] parameters = newExpr.getConstructor().getParameterTypes();
 
             if (Random.class.getName().equals(constructorClass)) {
@@ -71,7 +71,7 @@ public class BaseEditor extends ExprEditor {
                 throw new RuntimeException("SecureRandom not accepted");
             }
         } catch (NotFoundException | CannotCompileException ex) {
-            LOG.error("instrumentation of:{} error:{}", new Object[]{constructorClass, ex.getMessage()});
+            LOG.error("instrumentation of:{} error:{}", new Object[] { constructorClass, ex.getMessage() });
             ex.printStackTrace(System.err);
             throw new RuntimeException(ex);
         }
@@ -79,7 +79,7 @@ public class BaseEditor extends ExprEditor {
 
     @Override
     public void edit(MethodCall m) throws CannotCompileException {
-        String callerClassName = m.getFileName();
+        // String callerClassName = m.getFileName();
         String className = m.getClassName();
         String method = m.getMethodName();
         if (className == null || method == null) {
@@ -87,13 +87,12 @@ public class BaseEditor extends ExprEditor {
 
         }
 
-        //redirect random sources
+        // redirect random sources
         if (UUID.class.getName().equals(className) && method.equals("randomUUID")) {
-            m.replace(
-                    "{ long instrumentationUUIDLong1 = " + SimulationScenario.class.getName() + ".getRandom().nextLong(); "
-                    + "long instrumentationUUIDLong2 = " + SimulationScenario.class.getName() + ".getRandom().nextLong(); "
-                    + "$_ = new " + UUID.class
-                    .getName() + "(instrumentationUUIDLong1, instrumentationUUIDLong2); }");
+            m.replace("{ long instrumentationUUIDLong1 = " + SimulationScenario.class.getName()
+                    + ".getRandom().nextLong(); " + "long instrumentationUUIDLong2 = "
+                    + SimulationScenario.class.getName() + ".getRandom().nextLong(); " + "$_ = new "
+                    + UUID.class.getName() + "(instrumentationUUIDLong1, instrumentationUUIDLong2); }");
         }
 
         // redirect time sources
@@ -107,7 +106,7 @@ public class BaseEditor extends ExprEditor {
             return;
         }
 
-        //redirect thread sources
+        // redirect thread sources
         if (!allowThreads) {
             // redirect calls to Thread.sleep()
             if (className.equals("java.lang.Thread") && method.equals("sleep")) {
@@ -126,9 +125,9 @@ public class BaseEditor extends ExprEditor {
             m.replace("{ $_ = " + redirect + ".getDefaultTimeZone(); }");
             return;
         }
-        SecureRandom r;
+        // SecureRandom r;
 
-        //TODO Alex - old - doesn't work anymore
+        // TODO Alex - old - doesn't work anymore
         if (className.equals("java.security.SecureRandom") && method.equals("getPrngAlgorithm")) {
             m.replace("{ $_ = null; }");
             // System.err.println("REPLACED SECURE_RANDOM");

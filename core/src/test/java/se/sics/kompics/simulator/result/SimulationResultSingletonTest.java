@@ -25,8 +25,8 @@ import java.security.PrivilegedAction;
 import javassist.ClassPool;
 import javassist.Loader;
 import javassist.LoaderClassPath;
-import junit.framework.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import se.sics.kompics.simulator.instrumentation.CodeInterceptor;
 import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
 
@@ -37,14 +37,14 @@ public class SimulationResultSingletonTest {
 
     @Test
     public void test() throws InterruptedException {
-        Assert.assertNull(SimulationResultSingleton.instance);
+        assertNull(SimulationResultSingleton.instance);
         SimulationResultMap m = SimulationResultSingleton.getInstance();
-        Assert.assertNotNull(SimulationResultSingleton.instance);
+        assertNotNull(SimulationResultSingleton.instance);
         Thread t1 = new Thread(new TestThread1());
         t1.start();
         Thread.sleep(1000);
         int res = m.get("a", Integer.class);
-        Assert.assertEquals(1, res);
+        assertEquals(1, res);
     }
 
     public static class TestThread1 implements Runnable {

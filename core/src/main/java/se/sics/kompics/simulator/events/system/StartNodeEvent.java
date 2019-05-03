@@ -35,8 +35,7 @@ public abstract class StartNodeEvent extends SystemEvent {
     }
 
     /**
-     * Override to provide custom implementation. Default implementation
-     * provides no per node config
+     * Override to provide custom implementation. Default implementation provides no per node config
      *
      * @return per node configuration difference &lt;optionName,optionValue&gt;
      */
@@ -44,10 +43,11 @@ public abstract class StartNodeEvent extends SystemEvent {
         HashMap<String, Object> empty = new HashMap<>();
         return empty;
     }
-    
+
     public abstract Address getNodeAddress();
 
     public abstract Class<? extends ComponentDefinition> getComponentDefinition();
 
+    // TODO maybe make this properly conform to a single component type?
     public abstract Init getComponentInit();
 }

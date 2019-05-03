@@ -26,8 +26,7 @@ import java.util.LinkedList;
  * The <code>StochasticProcessTerminatedEvent</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: StochasticProcessTerminatedEvent.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: StochasticProcessTerminatedEvent.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public final class StochasticProcessTerminatedEvent extends StochasticSimulatorEvent {
 
@@ -38,8 +37,8 @@ public final class StochasticProcessTerminatedEvent extends StochasticSimulatorE
     private StochasticTakeSnapshotEvent snapshotEvent;
     private final String processName;
 
-    public StochasticProcessTerminatedEvent(long time,
-            LinkedList<StochasticProcessStartEvent> startEvents, String name) {
+    public StochasticProcessTerminatedEvent(long time, LinkedList<StochasticProcessStartEvent> startEvents,
+            String name) {
         super(time);
         this.startEvents = startEvents;
         this.processName = name;

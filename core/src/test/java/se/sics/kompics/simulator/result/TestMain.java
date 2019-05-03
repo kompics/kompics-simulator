@@ -20,14 +20,14 @@
  */
 package se.sics.kompics.simulator.result;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestMain {
-    
+
     public static void main(String[] args) {
-        Assert.assertNull(SimulationResultSingleton.instance);
+        assertNull(SimulationResultSingleton.instance);
         SimulationResultMap m = SimulationResultSingleton.getInstance();
-        Assert.assertNotNull(SimulationResultSingleton.instance);
+        assertNotNull(SimulationResultSingleton.instance);
         m.put("a", 1);
     }
 }

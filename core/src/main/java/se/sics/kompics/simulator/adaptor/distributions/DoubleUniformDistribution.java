@@ -26,8 +26,7 @@ import java.util.Random;
  * The <code>DoubleUniformDistribution</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: DoubleUniformDistribution.java 750 2009-04-02 09:55:01Z Cosmin
- * $
+ * @version $Id: DoubleUniformDistribution.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public class DoubleUniformDistribution extends Distribution<Double> {
 

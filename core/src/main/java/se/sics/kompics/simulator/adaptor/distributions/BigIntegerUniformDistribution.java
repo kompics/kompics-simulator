@@ -29,8 +29,7 @@ import java.util.Random;
  * The <code>BigIntegerUniformDistribution</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: BigIntegerUniformDistribution.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: BigIntegerUniformDistribution.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public class BigIntegerUniformDistribution extends Distribution<BigInteger> {
 
@@ -42,8 +41,7 @@ public class BigIntegerUniformDistribution extends Distribution<BigInteger> {
     private final boolean numBitsVersion;
     private final int numBits;
 
-    public BigIntegerUniformDistribution(BigInteger min, BigInteger max,
-            Random random) {
+    public BigIntegerUniformDistribution(BigInteger min, BigInteger max, Random random) {
         super(Type.UNIFORM, BigInteger.class);
         this.numBitsVersion = false;
         this.random = random;

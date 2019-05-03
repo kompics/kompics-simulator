@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import se.sics.kompics.*;
 import se.sics.kompics.config.Config;
 import se.sics.kompics.config.ConfigUpdate;
-import se.sics.kompics.network.Msg;
 import se.sics.kompics.network.Network;
 import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.core.SimulatorComp;
@@ -51,16 +50,18 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
     private static final Logger LOG = LoggerFactory.getLogger(SimulatorMngrComp.class);
     private String logPrefix = "";
 
-    private final Positive simPort = requires(SimulatorPort.class);
-    private final Positive simControlPort = requires(SimulatorControlPort.class);
-    private final Positive requiredNetwork = requires(Network.class);
-    private final Positive timer = requires(Timer.class);
+    private final Positive<SimulatorPort> simPort = requires(SimulatorPort.class);
+    private final Positive<SimulatorControlPort> simControlPort = requires(SimulatorControlPort.class);
+    private final Positive<Network> requiredNetwork = requires(Network.class);
+    private final Positive<Timer> timer = requires(Timer.class);
 
-    private final Negative providedNetwork = provides(Network.class);
+    private final Negative<Network> providedNetwork = provides(Network.class);
 
     private final GlobalViewImpl globalView;
     private IdentifierExtractor idE;
+    @SuppressWarnings("rawtypes")
     private Map<Identifier, Pair<Component, Channel[]>> systemNodes = new HashMap<>();
+    @SuppressWarnings("rawtypes")
     private Map<Component, Pair<Component, Channel[]>> dyingNodes = new HashMap<>();
 
     public SimulatorMngrComp(SimulatorMngrInit init) {
@@ -76,73 +77,76 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
 
         defaultSetup();
     }
-    
+
     @Override
     public Fault.ResolveAction handleFault(Fault fault) {
         LOG.error("{}fault:{}", logPrefix, fault.getCause());
         return Fault.ResolveAction.ESCALATE;
     }
 
-    //**********CONTROL HANDLERS************************************************
-    private final Handler handleStart = new Handler<Start>() {
+    // **********CONTROL HANDLERS************************************************
+    private final Handler<Start> handleStart = new Handler<Start>() {
         @Override
         public void handle(Start event) {
             LOG.info("{}starting...", logPrefix);
         }
     };
-    //************************TESTING_HANDLERS**********************************
-    private final Handler handleNet = new Handler<Msg>() {
-        @Override
-        public void handle(Msg msg) {
-            LOG.debug("{}net msg:{}", logPrefix, msg);
-        }
-    };
-    //**************************************************************************
+    // ************************TESTING_HANDLERS**********************************
+    // private final Handler<Msg<?, ?>> handleNet = new Handler<Msg<?, ?>>() {
+    // @Override
+    // public void handle(Msg<?, ?> msg) {
+    // LOG.debug("{}net msg:{}", logPrefix, msg);
+    // }
+    // };
+
+    // **************************************************************************
     private void defaultSetup() {
         connect(providedNetwork, requiredNetwork, Channel.TWO_WAY);
         idE = new SocketIdExtractor();
     }
-    
-    private final Handler handleSetup = new Handler<SetupEvent>() {
+
+    private final Handler<SetupEvent> handleSetup = new Handler<SetupEvent>() {
         @Override
         public void handle(SetupEvent setup) {
             LOG.debug("{}received setup:{}", logPrefix, setup);
 
             idE = setup.getIdentifierExtractor();
-            
-//            Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
-//            if (globalViewSetup != null) {
-//                for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
-//                    globalViewHandler.setSimulationContext(globalView);
-//                    subscribe(globalViewHandler, providedNetwork);
-//                }
-//            }
+
+            // Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
+            // if (globalViewSetup != null) {
+            // for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
+            // globalViewHandler.setSimulationContext(globalView);
+            // subscribe(globalViewHandler, providedNetwork);
+            // }
+            // }
             setup.setupSystemContext();
             setup.setupGlobalView(globalView);
         }
     };
 
-    private final Handler handleStartNode = new Handler<StartNodeEvent>() {
+    private final Handler<StartNodeEvent> handleStartNode = new Handler<StartNodeEvent>() {
 
         @Override
         public void handle(StartNodeEvent startNode) {
-            LOG.debug("{}received start:{} for node:{}", new Object[]{logPrefix, startNode,
-                startNode.getNodeAddress()});
+            LOG.debug("{}received start:{} for node:{}",
+                    new Object[] { logPrefix, startNode, startNode.getNodeAddress() });
 
             Config.Builder cb = config().modify(id());
-            //TODO Alex netbeans 8.0.2 bug? need to manually cast the Set to the correct thing
-            for (Map.Entry<String, Object> confUpdate : (Set<Map.Entry<String, Object>>) startNode.initConfigUpdate().entrySet()) {
+            // TODO Alex netbeans 8.0.2 bug? need to manually cast the Set to the correct thing
+            for (Map.Entry<String, Object> confUpdate : (Set<Map.Entry<String, Object>>) startNode.initConfigUpdate()
+                    .entrySet()) {
                 cb.setValue(confUpdate.getKey(), confUpdate.getValue());
             }
             cb.setValue("simulation.globalview", globalView);
             ConfigUpdate configUpdate = cb.finalise();
 
             Component node;
-            if(startNode.getComponentInit() instanceof Init.None) {
+            if (startNode.getComponentInit() instanceof Init.None) {
                 node = create(startNode.getComponentDefinition(), Init.NONE, configUpdate);
             } else {
                 node = create(startNode.getComponentDefinition(), startNode.getComponentInit(), configUpdate);
             }
+            @SuppressWarnings("rawtypes")
             Channel[] channels = new Channel[2];
             channels[0] = connect(node.getNegative(Timer.class), timer, Channel.TWO_WAY);
             channels[1] = connect(node.getNegative(Network.class), providedNetwork.getPair(),
@@ -154,11 +158,12 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         }
     };
 
-    private Handler handleKillNode = new Handler<KillNodeEvent>() {
+    private Handler<KillNodeEvent> handleKillNode = new Handler<KillNodeEvent>() {
 
         @Override
         public void handle(KillNodeEvent killNode) {
-            LOG.debug("{}received kill:{}", new Object[]{logPrefix, killNode});
+            LOG.debug("{}received kill:{}", new Object[] { logPrefix, killNode });
+            @SuppressWarnings("rawtypes")
             Pair<Component, Channel[]> node = systemNodes.remove(idE.extract(killNode.getNodeAddress()));
             if (node == null) {
                 throw new RuntimeException("node does not exist");
@@ -166,23 +171,24 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
             globalView.killNode(idE.extract(killNode.getNodeAddress()));
             LOG.debug("skipping disconnecting channels");
             dyingNodes.put(node.getValue0(), node);
-            //disconnect(node.getValue1()[0]);
-            //disconnect(node.getValue1()[1]);
+            // disconnect(node.getValue1()[0]);
+            // disconnect(node.getValue1()[1]);
             trigger(Kill.event, node.getValue0().control());
         }
     };
 
-    private Handler handleKilledNode = new Handler<Killed>() {
+    private Handler<Killed> handleKilledNode = new Handler<Killed>() {
 
         @Override
         public void handle(Killed killedNode) {
             LOG.debug("Received Killed from {}, about to disconnect channels", killedNode.component);
+            @SuppressWarnings("rawtypes")
             Pair<Component, Channel[]> node = dyingNodes.get(killedNode.component);
             if (node == null) {
                 throw new RuntimeException("node was never dying");
             }
-            disconnect(node.getValue1()[0]);
-            disconnect(node.getValue1()[1]);
+            node.getValue1()[0].disconnect();
+            node.getValue1()[1].disconnect();
             dyingNodes.remove(node.getValue0());
         }
     };
@@ -192,7 +198,7 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
         trigger(new TerminateExperiment(), simControlPort);
     }
 
-    private final Handler handleTerminateExperiment = new Handler<TerminateExperiment>() {
+    private final Handler<TerminateExperiment> handleTerminateExperiment = new Handler<TerminateExperiment>() {
 
         @Override
         public void handle(TerminateExperiment event) {

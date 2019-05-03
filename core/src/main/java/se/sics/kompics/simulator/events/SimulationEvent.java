@@ -22,13 +22,12 @@ package se.sics.kompics.simulator.events;
 import java.util.UUID;
 import se.sics.kompics.KompicsEvent;
 
-
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public abstract class SimulationEvent implements KompicsEvent {
     public final UUID id;
-    
+
     public SimulationEvent() {
         this.id = UUID.randomUUID();
     }

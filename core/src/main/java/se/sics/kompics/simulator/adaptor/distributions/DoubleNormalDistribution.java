@@ -53,12 +53,10 @@ public class DoubleNormalDistribution extends Distribution<Double> {
             first = false;
             u1 = random.nextDouble();
             u2 = random.nextDouble();
-            return mean + variance * Math.sqrt(-2 * Math.log(u1))
-                    * Math.cos(2 * Math.PI * u2);
+            return mean + variance * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
         } else {
             first = true;
-            return mean + variance * Math.sqrt(-2 * Math.log(u1))
-                    * Math.sin(2 * Math.PI * u2);
+            return mean + variance * Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2);
         }
     }
 }

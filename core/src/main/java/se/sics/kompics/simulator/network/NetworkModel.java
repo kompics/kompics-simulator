@@ -32,5 +32,5 @@ import se.sics.kompics.network.Msg;
  */
 public interface NetworkModel {
 
-	public long getLatencyMs(Msg message);
+    public long getLatencyMs(Msg<?, ?> message);
 }

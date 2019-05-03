@@ -44,10 +44,8 @@ public final class StochasticProcessEvent extends StochasticSimulatorEvent {
     private final StochasticProcessTerminatedEvent terminatedEvent;
     private final String processName;
 
-    public StochasticProcessEvent(long time,
-            Distribution<Long> interArrivalTimeDistribution,
-            StochasticProcessTerminatedEvent terminatedEvent,
-            List<OperationGenerator> operations, String name) {
+    public StochasticProcessEvent(long time, Distribution<Long> interArrivalTimeDistribution,
+            StochasticProcessTerminatedEvent terminatedEvent, List<OperationGenerator> operations, String name) {
         super(time);
         this.interArrivalTimeDistribution = interArrivalTimeDistribution;
         this.terminatedEvent = terminatedEvent;

@@ -34,8 +34,8 @@ public interface GlobalView {
     public Map<Identifier, Address> getDeadNodes();
 
     public boolean setValue(String key, Object value);
-    
+
     public <T> T getValue(String key, Class<T> type) throws ClassCastException;
-    
+
     public void terminate();
 }

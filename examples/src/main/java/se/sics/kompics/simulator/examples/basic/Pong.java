@@ -28,11 +28,11 @@ import java.util.UUID;
  */
 public class Pong {
     public final UUID id;
-    
+
     public Pong(UUID id) {
         this.id = id;
     }
-    
+
     @Override
     public String toString() {
         return "PONG<" + id.toString() + ">";

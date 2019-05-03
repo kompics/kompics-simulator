@@ -24,14 +24,17 @@ import java.util.Random;
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public class IntegerUniformDistribution extends Distribution<Integer>{
+@SuppressWarnings("serial")
+public class IntegerUniformDistribution extends Distribution<Integer> {
     private final Random rand;
     private final int min;
     private final int max;
-    
+
     /**
-     * @param min closed interval - included
-     * @param max open interval - excluded
+     * @param min
+     *            closed interval - included
+     * @param max
+     *            open interval - excluded
      */
     public IntegerUniformDistribution(int min, int max, Random rand) {
         super(Type.UNIFORM, Integer.class);
@@ -42,6 +45,6 @@ public class IntegerUniformDistribution extends Distribution<Integer>{
 
     @Override
     public Integer draw() {
-        return min + rand.nextInt(max-min);
+        return min + rand.nextInt(max - min);
     }
 }

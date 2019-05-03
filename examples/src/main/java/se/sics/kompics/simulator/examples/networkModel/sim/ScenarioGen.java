@@ -32,67 +32,70 @@ import se.sics.kompics.simulator.network.impl.UniformRandomModel;
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class ScenarioGen {
-  
-  static Operation<ChangeNetworkModelEvent> networkSetupOp = new Operation<ChangeNetworkModelEvent>() {
 
-    @Override
-    public ChangeNetworkModelEvent generate() {
-      return new ChangeNetworkModelEvent(new UniformRandomModel(3, 7));
-    }
-  };
-  
-  static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
-
-    @Override
-    public StartNodeEvent generate(final Integer node) {
-      return new StartNodeEvent() {
-        Address selfAdr;
-        Address pingAdr;
-
-        {
-          selfAdr = ScenarioSetup.nodeAddressMap.get(node);
-          pingAdr = ScenarioSetup.nodePing.get(node);
-        }
+    @SuppressWarnings("serial")
+    static Operation<ChangeNetworkModelEvent> networkSetupOp = new Operation<ChangeNetworkModelEvent>() {
 
         @Override
-        public Address getNodeAddress() {
-          return selfAdr;
+        public ChangeNetworkModelEvent generate() {
+            return new ChangeNetworkModelEvent(new UniformRandomModel(3, 7));
         }
-
-        @Override
-        public Class getComponentDefinition() {
-          return BasicPingComp.class;
-        }
-
-        @Override
-        public BasicPingComp.BasicPingInit getComponentInit() {
-          return new BasicPingComp.BasicPingInit(selfAdr, pingAdr);
-        }
-      };
-    }
-  };
-
-  public static SimulationScenario simplePing() {
-    SimulationScenario scen = new SimulationScenario() {
-      {
-        StochasticProcess networkSetup = new StochasticProcess() {
-          {
-            raise(1, networkSetupOp);
-          }
-        };
-        StochasticProcess startPeers = new StochasticProcess() {
-          {
-            eventInterArrivalTime(constant(1000));
-            raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
-          }
-        };
-
-        networkSetup.start();
-        startPeers.startAfterTerminationOf(0, networkSetup);
-        terminateAfterTerminationOf(20000, startPeers);
-      }
     };
 
-    return scen;
-  }
+    @SuppressWarnings("serial")
+    static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
+
+        @Override
+        public StartNodeEvent generate(final Integer node) {
+            return new StartNodeEvent() {
+                Address selfAdr;
+                Address pingAdr;
+
+                {
+                    selfAdr = ScenarioSetup.nodeAddressMap.get(node);
+                    pingAdr = ScenarioSetup.nodePing.get(node);
+                }
+
+                @Override
+                public Address getNodeAddress() {
+                    return selfAdr;
+                }
+
+                @Override
+                public Class<BasicPingComp> getComponentDefinition() {
+                    return BasicPingComp.class;
+                }
+
+                @Override
+                public BasicPingComp.BasicPingInit getComponentInit() {
+                    return new BasicPingComp.BasicPingInit(selfAdr, pingAdr);
+                }
+            };
+        }
+    };
+
+    @SuppressWarnings("serial")
+    public static SimulationScenario simplePing() {
+        SimulationScenario scen = new SimulationScenario() {
+            {
+                StochasticProcess networkSetup = new StochasticProcess() {
+                    {
+                        raise(1, networkSetupOp);
+                    }
+                };
+                StochasticProcess startPeers = new StochasticProcess() {
+                    {
+                        eventInterArrivalTime(constant(1000));
+                        raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
+                    }
+                };
+
+                networkSetup.start();
+                startPeers.startAfterTerminationOf(0, networkSetup);
+                terminateAfterTerminationOf(20000, startPeers);
+            }
+        };
+
+        return scen;
+    }
 }

@@ -52,12 +52,10 @@ public class LongNormalDistribution extends Distribution<Long> {
             first = false;
             u1 = random.nextDouble();
             u2 = random.nextDouble();
-            return mean + Math.round(variance * Math.sqrt(-2 * Math.log(u1))
-                            * Math.cos(2 * Math.PI * u2));
+            return mean + Math.round(variance * Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2));
         } else {
             first = true;
-            return mean + Math.round(variance * Math.sqrt(-2 * Math.log(u1))
-                            * Math.sin(2 * Math.PI * u2));
+            return mean + Math.round(variance * Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2));
         }
     }
 }

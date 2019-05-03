@@ -26,61 +26,64 @@ import se.sics.kompics.network.Transport;
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public class BasicContentMsg<A extends Address, H extends BasicHeader<A>, C extends Object> implements Msg<A, BasicHeader<A>>, 
-  PatternExtractor<Class<Object>, C>  {
+public class BasicContentMsg<A extends Address, H extends BasicHeader<A>, C extends Object>
+        implements Msg<A, BasicHeader<A>>, PatternExtractor<Class<Object>, C> {
 
-  private final H header;
-  private final C content;
+    private final H header;
+    private final C content;
 
-  public BasicContentMsg(H header, C content) {
-    this.header = header;
-    this.content = content;
-  }
+    public BasicContentMsg(H header, C content) {
+        this.header = header;
+        this.content = content;
+    }
 
-  public C getContent() {
-    return content;
-  }
+    public C getContent() {
+        return content;
+    }
 
-  @Override
-  public H getHeader() {
-    return header;
-  }
+    @Override
+    public H getHeader() {
+        return header;
+    }
 
-  @Override
-  public A getSource() {
-    return header.getSource();
-  }
+    @Override
+    public A getSource() {
+        return header.getSource();
+    }
 
-  @Override
-  public A getDestination() {
-    return header.getDestination();
-  }
+    @Override
+    public A getDestination() {
+        return header.getDestination();
+    }
 
-  @Override
-  public Transport getProtocol() {
-    return header.getProtocol();
-  }
+    @Override
+    public Transport getProtocol() {
+        return header.getProtocol();
+    }
 
-  @Override
-  public Class<Object> extractPattern() {
-    return (Class) content.getClass();
-  }
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<Object> extractPattern() {
+        return (Class<Object>) content.getClass();
+    }
 
-  @Override
-  public C extractValue() {
-    return content;
-  }
+    @Override
+    public C extractValue() {
+        return content;
+    }
 
-  @Override
-  public String toString() {
-    return content.toString() + "from:" + header.getSource() + "to:" + header.getDestination();
-  }
+    @Override
+    public String toString() {
+        return content.toString() + "from:" + header.getSource() + "to:" + header.getDestination();
+    }
 
-  public BasicContentMsg<A, H, C> withHeader(H newHeader) {
-    return new BasicContentMsg<>(newHeader, content);
-  }
+    public BasicContentMsg<A, H, C> withHeader(H newHeader) {
+        return new BasicContentMsg<>(newHeader, content);
+    }
 
-  public <C2 extends Object> BasicContentMsg<A, H, C2> answer(C2 newContent) {
-    return new BasicContentMsg(header.answer(), newContent);
-  }
+    @SuppressWarnings("unchecked")
+    public <C2 extends Object> BasicContentMsg<A, H, C2> answer(C2 newContent) {
+        return new BasicContentMsg<A, H, C2>((H) header.answer(), newContent); // the cast isn't really guaranteed to
+                                                                               // work, but oh well...
+    }
 }

@@ -27,18 +27,19 @@ import java.util.UUID;
  */
 public class Ping {
     private final UUID id;
+
     public Ping(UUID id) {
         this.id = id;
     }
-    
+
     public Ping() {
         this(UUID.randomUUID());
     }
-    
+
     public Pong pong() {
         return new Pong(id);
     }
-    
+
     @Override
     public String toString() {
         return "PING<" + id.toString() + ">";

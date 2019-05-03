@@ -24,13 +24,15 @@ import se.sics.kompics.simulator.adaptor.distributions.Distribution;
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
+@SuppressWarnings("serial")
 public class BasicIntSequentialDistribution extends Distribution<Integer> {
     private int current;
-    
+
     public BasicIntSequentialDistribution(int start) {
         super(Type.OTHER, Integer.class);
         current = start;
     }
+
     @Override
     public Integer draw() {
         return current++;

@@ -24,9 +24,10 @@ import se.sics.kompics.network.Msg;
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
+@SuppressWarnings("rawtypes")
 public class DestinationHostSelector extends ChannelSelector<Msg, Identifier> {
     private final IdentifierExtractor sIdE;
-    
+
     public DestinationHostSelector(Identifier hostId, IdentifierExtractor sIdE, boolean positive) {
         super(Msg.class, hostId, positive);
         this.sIdE = sIdE;

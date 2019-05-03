@@ -40,100 +40,99 @@ import se.sics.kompics.timer.Timer;
  */
 public class BasicPingComp extends ComponentDefinition {
 
-  private final Positive network = requires(Network.class);
-  private final Positive timer = requires(Timer.class);
+    private final Positive<Network> network = requires(Network.class);
+    private final Positive<Timer> timer = requires(Timer.class);
 
-  private Address selfAdr;
-  private Address pingAdr;
+    private Address selfAdr;
+    private Address pingAdr;
 
-  private UUID pingTid;
+    private UUID pingTid;
 
-  public BasicPingComp(BasicPingInit init) {
-    selfAdr = init.selfAdr;
-    pingAdr = init.pingAdr;
+    public BasicPingComp(BasicPingInit init) {
+        selfAdr = init.selfAdr;
+        pingAdr = init.pingAdr;
 
-    subscribe(handleStart, control);
-    subscribe(handlePingTimeout, timer);
-    subscribe(handlePing, network);
-    subscribe(handlePong, network);
-  }
-
-  private Handler handleStart = new Handler<Start>() {
-    @Override
-    public void handle(Start event) {
-      schedulePeriodicPing();
+        subscribe(handleStart, control);
+        subscribe(handlePingTimeout, timer);
+        subscribe(handlePing, network);
+        subscribe(handlePong, network);
     }
-  };
 
-  private void send(Object content, Address target) {
-    BasicHeader header = new BasicHeader(selfAdr, target, Transport.UDP);
-    BasicContentMsg msg = new BasicContentMsg(header, content);
-    logger.info("{}sending:{} from:{} to:{}", new Object[]{selfAdr, msg.getContent(),
-      msg.getHeader().getSource(), msg.getHeader().getDestination()});
-    trigger(msg, network);
-  }
-  private Handler handlePingTimeout = new Handler<PingTimeout>() {
+    private Handler<Start> handleStart = new Handler<Start>() {
+        @Override
+        public void handle(Start event) {
+            schedulePeriodicPing();
+        }
+    };
 
-    @Override
-    public void handle(PingTimeout timeout) {
-      logger.info("{}ping timeout", selfAdr);
-      if (pingAdr == null) {
-        cancelPeriodicPing();
-        return;
-      }
-      send(new Ping(), pingAdr);
+    private void send(Object content, Address target) {
+        BasicHeader<Address> header = new BasicHeader<>(selfAdr, target, Transport.UDP);
+        BasicContentMsg<Address, BasicHeader<Address>, Object> msg = new BasicContentMsg<>(header, content);
+        logger.info("{}sending:{} from:{} to:{}", new Object[] { selfAdr, msg.getContent(), msg.getHeader().getSource(),
+                msg.getHeader().getDestination() });
+        trigger(msg, network);
     }
-  };
 
-  ClassMatchedHandler handlePing
-    = new ClassMatchedHandler<Ping, BasicContentMsg<Address, BasicHeader<Address>, Ping>>() {
+    private Handler<PingTimeout> handlePingTimeout = new Handler<PingTimeout>() {
 
-    @Override
-    public void handle(Ping ping, BasicContentMsg<Address, BasicHeader<Address>, Ping> container) {
-      logger.info("{}received:{}", new Object[]{selfAdr, container});
-      send(ping.pong(), container.getHeader().getSource());
+        @Override
+        public void handle(PingTimeout timeout) {
+            logger.info("{}ping timeout", selfAdr);
+            if (pingAdr == null) {
+                cancelPeriodicPing();
+                return;
+            }
+            send(new Ping(), pingAdr);
+        }
+    };
+
+    ClassMatchedHandler<Ping, BasicContentMsg<Address, BasicHeader<Address>, Ping>> handlePing = new ClassMatchedHandler<Ping, BasicContentMsg<Address, BasicHeader<Address>, Ping>>() {
+
+        @Override
+        public void handle(Ping ping, BasicContentMsg<Address, BasicHeader<Address>, Ping> container) {
+            logger.info("{}received:{}", new Object[] { selfAdr, container });
+            send(ping.pong(), container.getHeader().getSource());
+        }
+    };
+
+    ClassMatchedHandler<Pong, BasicContentMsg<Address, BasicHeader<Address>, Pong>> handlePong = new ClassMatchedHandler<Pong, BasicContentMsg<Address, BasicHeader<Address>, Pong>>() {
+
+        @Override
+        public void handle(Pong pong, BasicContentMsg<Address, BasicHeader<Address>, Pong> container) {
+            logger.info("{}received:{}", new Object[] { selfAdr, container });
+            pingAdr = null;
+            cancelPeriodicPing();
+        }
+    };
+
+    public static class BasicPingInit extends Init<BasicPingComp> {
+
+        public final Address selfAdr;
+        public final Address pingAdr;
+
+        public BasicPingInit(Address selfAdr, Address pingAdr) {
+            this.selfAdr = selfAdr;
+            this.pingAdr = pingAdr;
+        }
     }
-  };
 
-  ClassMatchedHandler handlePong
-    = new ClassMatchedHandler<Pong, BasicContentMsg<Address, BasicHeader<Address>, Pong>>() {
-
-    @Override
-    public void handle(Pong pong, BasicContentMsg<Address, BasicHeader<Address>, Pong> container) {
-      logger.info("{}received:{}", new Object[]{selfAdr, container});
-      pingAdr = null;
-      cancelPeriodicPing();
+    private void schedulePeriodicPing() {
+        SchedulePeriodicTimeout spt = new SchedulePeriodicTimeout(1000, 1000);
+        PingTimeout ping = new PingTimeout(spt);
+        spt.setTimeoutEvent(ping);
+        trigger(spt, timer);
+        pingTid = ping.getTimeoutId();
     }
-  };
 
-  public static class BasicPingInit extends Init<BasicPingComp> {
-
-    public final Address selfAdr;
-    public final Address pingAdr;
-
-    public BasicPingInit(Address selfAdr, Address pingAdr) {
-      this.selfAdr = selfAdr;
-      this.pingAdr = pingAdr;
+    private void cancelPeriodicPing() {
+        trigger(new CancelPeriodicTimeout(pingTid), timer);
+        pingTid = null;
     }
-  }
 
-  private void schedulePeriodicPing() {
-    SchedulePeriodicTimeout spt = new SchedulePeriodicTimeout(1000, 1000);
-    PingTimeout ping = new PingTimeout(spt);
-    spt.setTimeoutEvent(ping);
-    trigger(spt, timer);
-    pingTid = ping.getTimeoutId();
-  }
+    public static class PingTimeout extends Timeout {
 
-  private void cancelPeriodicPing() {
-    trigger(new CancelPeriodicTimeout(pingTid), timer);
-    pingTid = null;
-  }
-
-  public static class PingTimeout extends Timeout {
-
-    public PingTimeout(SchedulePeriodicTimeout spt) {
-      super(spt);
+        public PingTimeout(SchedulePeriodicTimeout spt) {
+            super(spt);
+        }
     }
-  }
 }

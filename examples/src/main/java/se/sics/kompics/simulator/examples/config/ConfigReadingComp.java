@@ -33,22 +33,25 @@ import se.sics.kompics.timer.Timer;
  */
 public class ConfigReadingComp extends ComponentDefinition {
 
-  private final Positive network = requires(Network.class);
-  private final Positive timer = requires(Timer.class);
+    // Test throws an exception if these are removed (but doesn't fail^^)
+    @SuppressWarnings("unused")
+    private final Positive<Network> network = requires(Network.class);
+    @SuppressWarnings("unused")
+    private final Positive<Timer> timer = requires(Timer.class);
 
-  public ConfigReadingComp(ConfigReadingInit init) {
-    loggingCtxPutAlways("nId", config().getValue("system.id", Integer.class).toString());
+    public ConfigReadingComp(ConfigReadingInit init) {
+        loggingCtxPutAlways("nId", config().getValue("system.id", Integer.class).toString());
 
-    subscribe(handleStart, control);
-  }
-
-  Handler handleStart = new Handler<Start>() {
-    @Override
-    public void handle(Start event) {
-      logger.info("config value:{} with default(reference)", config().getValue("example.val", String.class));
+        subscribe(handleStart, control);
     }
-  };
 
-  public static class ConfigReadingInit extends Init<ConfigReadingComp> {
-  }
+    Handler<Start> handleStart = new Handler<Start>() {
+        @Override
+        public void handle(Start event) {
+            logger.info("config value:{} with default(reference)", config().getValue("example.val", String.class));
+        }
+    };
+
+    public static class ConfigReadingInit extends Init<ConfigReadingComp> {
+    }
 }

@@ -39,7 +39,7 @@ public class StochasticKompicsSimulatorEvent extends StochasticSimulatorEvent {
         super(time);
         this.event = event;
     }
-    
+
     public boolean canceled() {
         return canceled;
     }

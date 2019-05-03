@@ -26,8 +26,7 @@ import java.util.LinkedList;
  * The <code>StochasticProcessStartEvent</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: StochasticProcessStartEvent.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: StochasticProcessStartEvent.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public final class StochasticProcessStartEvent extends StochasticSimulatorEvent {
 
@@ -39,8 +38,7 @@ public final class StochasticProcessStartEvent extends StochasticSimulatorEvent 
     private final String processName;
     private final long delay;
 
-    public StochasticProcessStartEvent(long time,
-            LinkedList<StochasticProcessStartEvent> startEvents,
+    public StochasticProcessStartEvent(long time, LinkedList<StochasticProcessStartEvent> startEvents,
             StochasticProcessEvent stochasticEvent, int waitFor, String name) {
         super(time);
         this.delay = time;

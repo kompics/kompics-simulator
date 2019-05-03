@@ -28,13 +28,14 @@ import se.sics.kompics.simulator.network.identifier.Identifier;
 /**
  * @author Alex Ormenisan <aaor@kth.se>
  */
+@SuppressWarnings("serial")
 public class SocketId implements Identifier {
     private final InetSocketAddress isa;
-    
+
     public SocketId(InetSocketAddress isa) {
         this.isa = isa;
     }
-    
+
     @Override
     public int partition(int nrPartitions) {
         int ip = Ints.fromByteArray(isa.getAddress().getAddress());

@@ -32,13 +32,13 @@ import java.util.jar.JarFile;
  */
 public class JarURLFixClassLoader extends ClassLoader {
 
-    private final ClassLoader parent;
-    
+    // private final ClassLoader parent;
+
     public JarURLFixClassLoader(ClassLoader parent) {
         super(parent);
-        this.parent = parent;
+        // this.parent = parent;
     }
-    
+
     @Override
     public InputStream getResourceAsStream(String name) {
         URL url = getResource(name);
@@ -47,30 +47,30 @@ public class JarURLFixClassLoader extends ClassLoader {
         }
         try {
             if (url.getProtocol().equalsIgnoreCase("jar")) {
-                //System.out.println("Taking apart url to build a proper JarFile instance...");
+                // System.out.println("Taking apart url to build a proper JarFile instance...");
                 String urlS = url.toExternalForm();
                 String[] urlParts = urlS.substring(9).split("!/");
                 if (urlParts.length != 2) {
-                    //System.err.println("Couldn't split input properly: " + urlS);
+                    // System.err.println("Couldn't split input properly: " + urlS);
                     return null;
                 }
                 String jarPart = urlParts[0];
-                //System.out.println("jarPart: "+ jarPart);
+                // System.out.println("jarPart: "+ jarPart);
                 String entryPart = urlParts[1];
-                //System.out.println("entryPart: "+ entryPart);
+                // System.out.println("entryPart: "+ entryPart);
                 JarFile jf = new JarFile(jarPart);
-                //System.out.println("jf: " + jf);
+                // System.out.println("jf: " + jf);
                 JarEntry je = jf.getJarEntry(entryPart);
-                //System.out.println("je: " + je);
+                // System.out.println("je: " + je);
                 InputStream is = jf.getInputStream(je);
                 if (is != null) {
-                    //System.out.println("is: " + is);
+                    // System.out.println("is: " + is);
                     return is;
                 } else {
-                    //System.err.println("Couldn't get a proper input stream...dunno why -.- ");
+                    // System.err.println("Couldn't get a proper input stream...dunno why -.- ");
                     return null;
                 }
-            } else {                 
+            } else {
                 return url.openStream();
             }
         } catch (IOException e) {

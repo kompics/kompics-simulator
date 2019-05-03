@@ -26,18 +26,20 @@ import se.sics.kompics.network.Msg;
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
-public abstract class GlobalViewHandler<E extends KompicsEvent, M extends Msg & PatternExtractor<Class<Object>, E>> extends ClassMatchedHandler<E, M> {
+@SuppressWarnings("rawtypes")
+public abstract class GlobalViewHandler<E extends KompicsEvent, M extends Msg & PatternExtractor<Class<Object>, E>>
+        extends ClassMatchedHandler<E, M> {
     private GlobalView simContext;
-    
+
     public void setSimulationContext(GlobalView simContext) {
         this.simContext = simContext;
     }
-    
-    @Override 
+
+    @Override
     public final void handle(E content, M container) {
         handle(content, container, simContext);
     }
-    
+
     public abstract void handle(E content, M container, GlobalView simContext);
-    
+
 }

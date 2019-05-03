@@ -38,11 +38,11 @@ import se.sics.kompics.timer.Timer;
  * @author Alex Ormenisan <aaor@sics.se>
  */
 public class LauncherComp extends ComponentDefinition {
-    
+
     public static BasicSimulationScheduler simulatorScheduler = new BasicSimulationScheduler();
-    
+
     public static final FaultHandler NO_CRASH_HANDLER = new FaultHandler() {
-        
+
         @Override
         public Fault.ResolveAction handle(Fault f) {
             System.err.println("Fault in Kompics component escalated to root:\n" + f);
@@ -50,21 +50,23 @@ public class LauncherComp extends ComponentDefinition {
             return Fault.ResolveAction.DESTROY;
         }
     };
-    
+
     public static void main(String[] args) {
         Kompics.setFaultHandler(NO_CRASH_HANDLER);
         Kompics.setScheduler(simulatorScheduler);
         Kompics.createAndStart(LauncherComp.class, 1);
     }
-    
+
     private final SimulationScenario scenario = SimulationScenario.load(System.getProperty("scenario"));
-    
+
     public LauncherComp() {
         Component simulator = create(P2pSimulator.class, new P2pSimulatorInit(simulatorScheduler, scenario, null));
         Component simManager = create(SimulatorMngrComp.class, new SimulatorMngrComp.SimulatorMngrInit());
         connect(simManager.getNegative(Network.class), simulator.getPositive(Network.class), Channel.TWO_WAY);
         connect(simManager.getNegative(Timer.class), simulator.getPositive(Timer.class), Channel.TWO_WAY);
-        connect(simManager.getNegative(SimulatorPort.class), simulator.getPositive(SimulatorPort.class), Channel.TWO_WAY);
-        connect(simManager.getNegative(SimulatorControlPort.class), simulator.getPositive(SimulatorControlPort.class), Channel.TWO_WAY);
+        connect(simManager.getNegative(SimulatorPort.class), simulator.getPositive(SimulatorPort.class),
+                Channel.TWO_WAY);
+        connect(simManager.getNegative(SimulatorControlPort.class), simulator.getPositive(SimulatorControlPort.class),
+                Channel.TWO_WAY);
     }
 }

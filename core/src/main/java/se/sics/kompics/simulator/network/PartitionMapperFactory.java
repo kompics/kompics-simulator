@@ -28,7 +28,7 @@ public class PartitionMapperFactory {
     /**
      * @return if nodeIds have a uniform distribution - the two partitions should be roughly equal
      */
-    public static <ID extends Identifier> PartitionMapper get2EqualPartitions(Class<ID> identifierClass) {
+    public static <ID extends Identifier> PartitionMapper<ID> get2EqualPartitions(Class<ID> identifierClass) {
         return new PartitionMapper<ID>() {
             @Override
             public int getPartition(ID nodeId) {
@@ -36,14 +36,14 @@ public class PartitionMapperFactory {
             }
         };
     }
-    
-    public static <ID extends Identifier> PartitionMapper get2WeightedPartitions(Class<ID> identifierClass, 
+
+    public static <ID extends Identifier> PartitionMapper<ID> get2WeightedPartitions(Class<ID> identifierClass,
             final int weight1, final int weight2) {
         return new PartitionMapper<ID>() {
 
             @Override
             public int getPartition(ID nodeId) {
-                if(nodeId.partition(weight1 + weight2) < weight1) {
+                if (nodeId.partition(weight1 + weight2) < weight1) {
                     return 0;
                 } else {
                     return 1;

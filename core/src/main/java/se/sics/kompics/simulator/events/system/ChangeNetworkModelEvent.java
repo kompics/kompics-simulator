@@ -27,7 +27,7 @@ import se.sics.kompics.simulator.network.NetworkModel;
  */
 public class ChangeNetworkModelEvent extends SimulationEvent {
     public final NetworkModel netModel;
-    
+
     public ChangeNetworkModelEvent(NetworkModel netModel) {
         super();
         this.netModel = netModel;

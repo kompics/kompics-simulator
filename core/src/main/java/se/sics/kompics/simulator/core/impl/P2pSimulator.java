@@ -70,10 +70,10 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
     private static final Logger LOG = LoggerFactory.getLogger(P2pSimulator.class);
     private String logPrefix = "";
 
-    Negative simPort = provides(SimulatorPort.class);
-    Negative simControlPort = provides(SimulatorControlPort.class);
-    Negative network = provides(Network.class);
-    Negative timer = provides(Timer.class);
+    Negative<SimulatorPort> simPort = provides(SimulatorPort.class);
+    Negative<SimulatorControlPort> simControlPort = provides(SimulatorControlPort.class);
+    Negative<Network> network = provides(Network.class);
+    Negative<Timer> timer = provides(Timer.class);
 
     private final SimulationScheduler scheduler;
     private final SimulationScenario scenario;
@@ -99,8 +99,8 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         scenario = init.scenario;
         networkModel = init.networkModel;
         random = SimulationScenario.getRandom();
-        
-         //simulator system
+
+        // simulator system
         SimulatorSystem.setSimulator(this);
 
         futureEventList = new FutureEventList();
@@ -115,29 +115,29 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         subscribe(handleCPT, timer);
         subscribe(handleTerminate, simControlPort);
     }
-    
+
     @Override
     public ResolveAction handleFault(Fault fault) {
         LOG.error("{}fault:{}", logPrefix, fault.getCause());
         return ResolveAction.ESCALATE;
     }
 
-//    public Pair<Long, Boolean> advanceSimulation(long milis) {
-//        boolean executingNewEvent = false;
-//        long nextEventTime = futureEventList.getFirstEventTime();
-//        if (nextEventTime > milis) {
-//            CLOCK = milis;
-//            return Pair.with(nextEventTime, executingNewEvent);
-//        }
-//        if (nextEventTime == -1) {
-//            executingNewEvent = false;
-//        } else {
-//            executingNewEvent = true;
-//        }
-//        advanceSimulation();
-//        nextEventTime = futureEventList.getFirstEventTime();
-//        return Pair.with(futureEventList.getFirstEventTime(), executingNewEvent);
-//    }
+    // public Pair<Long, Boolean> advanceSimulation(long milis) {
+    // boolean executingNewEvent = false;
+    // long nextEventTime = futureEventList.getFirstEventTime();
+    // if (nextEventTime > milis) {
+    // CLOCK = milis;
+    // return Pair.with(nextEventTime, executingNewEvent);
+    // }
+    // if (nextEventTime == -1) {
+    // executingNewEvent = false;
+    // } else {
+    // executingNewEvent = true;
+    // }
+    // advanceSimulation();
+    // nextEventTime = futureEventList.getFirstEventTime();
+    // return Pair.with(futureEventList.getFirstEventTime(), executingNewEvent);
+    // }
     @Override
     public boolean advanceSimulation() {
         StochasticSimulatorEvent event = futureEventList.getAndRemoveFirstEvent(CLOCK);
@@ -150,8 +150,8 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         long time = event.getTime();
 
         if (time < CLOCK) {
-            throw new RuntimeException("Future event has past timestamp."
-                    + " CLOCK=" + CLOCK + " event=" + time + event);
+            throw new RuntimeException(
+                    "Future event has past timestamp." + " CLOCK=" + CLOCK + " event=" + time + event);
         }
         CLOCK = time;
 
@@ -266,7 +266,7 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
             LOG.debug("{}changing network parameters acording to:{}", logPrefix, networkEvent.netModel);
             networkModel = networkEvent.netModel;
         } else {
-            LOG.trace("{}sending:{}-{}", new Object[]{logPrefix, pName(event), e});
+            LOG.trace("{}sending:{}-{}", new Object[] { logPrefix, pName(event), e });
             trigger(e, simPort);
         }
 
@@ -285,23 +285,24 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
     private void executeKompicsEvent(KompicsEvent kompicsEvent) {
         // trigger Messages on the Network port
         if (Msg.class.isAssignableFrom(kompicsEvent.getClass())) {
-            Msg message = (Msg) kompicsEvent;
-            LOG.trace("{}delivered network msg:{} from:{} to:{}", new Object[]{logPrefix,
-                message, message.getHeader().getSource(), message.getHeader().getDestination()});
+            Msg<?, ?> message = (Msg<?, ?>) kompicsEvent;
+            LOG.trace("{}delivered network msg:{} from:{} to:{}", new Object[] { logPrefix, message,
+                    message.getHeader().getSource(), message.getHeader().getDestination() });
             trigger(kompicsEvent, network);
             return;
         }
         // trigger Timeouts on the Timer port
         if (Timeout.class.isAssignableFrom(kompicsEvent.getClass())) {
             Timeout timeout = (Timeout) kompicsEvent;
-            LOG.trace("{}trigger timeout:{}<{}>", new Object[]{logPrefix, kompicsEvent.getClass(), timeout.getTimeoutId()});
+            LOG.trace("{}trigger timeout:{}<{}>",
+                    new Object[] { logPrefix, kompicsEvent.getClass(), timeout.getTimeoutId() });
             activeTimers.remove(timeout.getTimeoutId());
             trigger(kompicsEvent, timer);
             return;
         }
 
         // trigger other Kompics events on the simulation port
-        LOG.trace("{}other:{}", new Object[]{logPrefix, kompicsEvent});
+        LOG.trace("{}other:{}", new Object[] { logPrefix, kompicsEvent });
         trigger(kompicsEvent, simPort);
     }
 
@@ -319,8 +320,8 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
                 System.exit(1);
             }
 
-            LOG.debug("{}triggered [periodic] timeout:{}<{}>", new Object[]{logPrefix,
-                timeout.getClass().getName(), timeout.getTimeoutId()});
+            LOG.debug("{}triggered [periodic] timeout:{}<{}>",
+                    new Object[] { logPrefix, timeout.getClass().getName(), timeout.getTimeoutId() });
             trigger(timeout, timer);
         }
         futureEventList.scheduleFutureEvent(CLOCK, periodic);
@@ -332,8 +333,7 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         }
     }
 
-    private boolean executeSimultationTerminationEvent(
-            StochasticSimulationTerminatedEvent event) {
+    private boolean executeSimultationTerminationEvent(StochasticSimulationTerminatedEvent event) {
         if (event.shouldTerminateNow()) {
             try {
                 trigger(new TerminateExperiment(), simControlPort);
@@ -347,7 +347,8 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         }
         return true;
     }
-    Handler handleStart = new Handler<Start>() {
+
+    Handler<Start> handleStart = new Handler<Start>() {
         @Override
         public void handle(Start event) {
             // generate initial future events from the scenario
@@ -358,35 +359,33 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
             LOG.info("{}simulation started", logPrefix);
         }
     };
-    Handler handleMsg = new Handler<Msg>() {
+    Handler<Msg<?, ?>> handleMsg = new Handler<Msg<?, ?>>() {
 
         @Override
-        public void handle(Msg event) {
+        public void handle(Msg<?, ?> event) {
             random.nextInt();
-            LOG.debug("{}sending msg:{} from:{} to:{}", new Object[]{logPrefix,
-                event, event.getHeader().getSource(), event.getHeader().getDestination()});
+            LOG.debug("{}sending msg:{} from:{} to:{}", new Object[] { logPrefix, event, event.getHeader().getSource(),
+                    event.getHeader().getDestination() });
 
             if (networkModel != null) {
                 long latency = networkModel.getLatencyMs(event);
                 if (latency == -1) {
-                    //drop message
+                    // drop message
                     return;
                 }
-                futureEventList.scheduleFutureEvent(CLOCK,
-                        new StochasticKompicsSimulatorEvent(event, CLOCK + latency));
+                futureEventList.scheduleFutureEvent(CLOCK, new StochasticKompicsSimulatorEvent(event, CLOCK + latency));
             } else {
                 // we just echo the message on the network port
-                futureEventList.scheduleFutureEvent(CLOCK,
-                        new StochasticKompicsSimulatorEvent(event, CLOCK + 0));
+                futureEventList.scheduleFutureEvent(CLOCK, new StochasticKompicsSimulatorEvent(event, CLOCK + 0));
             }
         }
     };
-    Handler handleST = new Handler<ScheduleTimeout>() {
+    Handler<ScheduleTimeout> handleST = new Handler<ScheduleTimeout>() {
 
         @Override
         public void handle(ScheduleTimeout event) {
-            LOG.debug("{}scheduleTimeout@{} : {} {} AT={}", new Object[]{logPrefix, event.getDelay(),
-                event.getTimeoutEvent(), event.getTimeoutEvent().getTimeoutId(), activeTimers.keySet()});
+            LOG.debug("{}scheduleTimeout@{} : {} {} AT={}", new Object[] { logPrefix, event.getDelay(),
+                    event.getTimeoutEvent(), event.getTimeoutEvent().getTimeoutId(), activeTimers.keySet() });
 
             if (event.getDelay() < 0) {
                 throw new RuntimeException("Cannot set a negative timeout value.");
@@ -395,18 +394,18 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
                 throw new IllegalStateException("Timeout event was null for:" + event.getClass().getCanonicalName());
             }
 
-            StochasticKompicsSimulatorEvent timeout = new StochasticKompicsSimulatorEvent(
-                    event.getTimeoutEvent(), CLOCK + event.getDelay());
+            StochasticKompicsSimulatorEvent timeout = new StochasticKompicsSimulatorEvent(event.getTimeoutEvent(),
+                    CLOCK + event.getDelay());
             activeTimers.put(event.getTimeoutEvent().getTimeoutId(), timeout);
             futureEventList.scheduleFutureEvent(CLOCK, timeout);
         }
     };
-    Handler handleSPT = new Handler<SchedulePeriodicTimeout>() {
+    Handler<SchedulePeriodicTimeout> handleSPT = new Handler<SchedulePeriodicTimeout>() {
 
         @Override
         public void handle(SchedulePeriodicTimeout event) {
-            LOG.debug("{}schedulePeriodicTimeout@{} : {}", new Object[]{logPrefix, event.getPeriod(),
-                    event.getTimeoutEvent()});
+            LOG.debug("{}schedulePeriodicTimeout@{} : {}",
+                    new Object[] { logPrefix, event.getPeriod(), event.getTimeoutEvent() });
 
             if (event.getDelay() < 0 || event.getPeriod() < 0) {
                 throw new RuntimeException("Cannot set a negative timeout value.");
@@ -414,35 +413,34 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
 
             StochasticPeriodicSimulatorEvent periodicTimeout = new StochasticPeriodicSimulatorEvent(
                     event.getTimeoutEvent(), CLOCK + event.getDelay(), event.getPeriod());
-            activePeriodicTimers.put(event.getTimeoutEvent().getTimeoutId(),
-                    periodicTimeout);
+            activePeriodicTimers.put(event.getTimeoutEvent().getTimeoutId(), periodicTimeout);
             futureEventList.scheduleFutureEvent(CLOCK, periodicTimeout);
         }
     };
-    Handler handleCT = new Handler<CancelTimeout>() {
+    Handler<CancelTimeout> handleCT = new Handler<CancelTimeout>() {
 
         @Override
         public void handle(CancelTimeout event) {
             UUID timeoutId = event.getTimeoutId();
-            LOG.debug("{}cancelTimeout: {}. AT={}", new Object[]{logPrefix, timeoutId, activeTimers.keySet()});
+            LOG.debug("{}cancelTimeout: {}. AT={}", new Object[] { logPrefix, timeoutId, activeTimers.keySet() });
 
             StochasticKompicsSimulatorEvent kse = activeTimers.remove(timeoutId);
 
             if (kse != null) {
                 kse.cancel();
             } else {
-                // CancelTimeout comes after expiration or previous cancelation 
+                // CancelTimeout comes after expiration or previous cancelation
                 LOG.warn("{}cannot find timeout:{}", logPrefix, event.getTimeoutId());
             }
         }
     };
-    Handler handleCPT = new Handler<CancelPeriodicTimeout>() {
+    Handler<CancelPeriodicTimeout> handleCPT = new Handler<CancelPeriodicTimeout>() {
 
         @Override
         public void handle(CancelPeriodicTimeout event) {
             UUID timeoutId = event.getTimeoutId();
-            LOG.debug("{}cancelPeriodicTimeout: {}. APT={}", new Object[]{logPrefix, timeoutId,
-                    activePeriodicTimers.keySet()});
+            LOG.debug("{}cancelPeriodicTimeout: {}. APT={}",
+                    new Object[] { logPrefix, timeoutId, activePeriodicTimers.keySet() });
 
             StochasticKompicsSimulatorEvent kse = activePeriodicTimers.remove(timeoutId);
             boolean removed = futureEventList.cancelFutureEvent(CLOCK, kse);
@@ -451,12 +449,12 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
             }
         }
     };
-    Handler handleTerminate = new Handler<TerminateExperiment>() {
+    Handler<TerminateExperiment> handleTerminate = new Handler<TerminateExperiment>() {
 
         @Override
         public void handle(TerminateExperiment event) {
-            StochasticSimulationTerminatedEvent terminatedEvent = new StochasticSimulationTerminatedEvent(
-                    CLOCK, 0, false);
+            StochasticSimulationTerminatedEvent terminatedEvent = new StochasticSimulationTerminatedEvent(CLOCK, 0,
+                    false);
             futureEventList.scheduleFutureEvent(CLOCK, terminatedEvent);
         }
     };
@@ -498,11 +496,9 @@ public final class P2pSimulator extends ComponentDefinition implements Simulator
         LOG.info("{}Simulated time: {}", logPrefix, durationToString(CLOCK));
         LOG.info("{}Real time: {}", logPrefix, durationToString(realDuration));
         if (CLOCK > realDuration) {
-            LOG.info("{}Time compression factor:{}", logPrefix,
-                    ((double) CLOCK / realDuration));
+            LOG.info("{}Time compression factor:{}", logPrefix, ((double) CLOCK / realDuration));
         } else {
-            LOG.info("{}Time expansion factor::{}", logPrefix, 
-                    ((double) realDuration / CLOCK));
+            LOG.info("{}Time expansion factor::{}", logPrefix, ((double) realDuration / CLOCK));
         }
         LOG.info("========================================================");
     }

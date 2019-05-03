@@ -32,58 +32,60 @@ import se.sics.kompics.simulator.examples.config.ConfigReadingComp;
  */
 public class ScenarioGen {
 
-  static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
-
-    @Override
-    public StartNodeEvent generate(final Integer node) {
-      return new StartNodeEvent() {
-        Address selfAdr;
-
-        {
-          selfAdr = ScenarioSetup.nodeAddressMap.get(node);
-        }
+    @SuppressWarnings("serial")
+    static Operation1<StartNodeEvent, Integer> startNodeOp = new Operation1<StartNodeEvent, Integer>() {
 
         @Override
-        public Address getNodeAddress() {
-          return selfAdr;
+        public StartNodeEvent generate(final Integer node) {
+            return new StartNodeEvent() {
+                Address selfAdr;
+
+                {
+                    selfAdr = ScenarioSetup.nodeAddressMap.get(node);
+                }
+
+                @Override
+                public Address getNodeAddress() {
+                    return selfAdr;
+                }
+
+                @Override
+                public Class<ConfigReadingComp> getComponentDefinition() {
+                    return ConfigReadingComp.class;
+                }
+
+                @Override
+                public ConfigReadingComp.ConfigReadingInit getComponentInit() {
+                    return new ConfigReadingComp.ConfigReadingInit();
+                }
+
+                @Override
+                public Map<String, Object> initConfigUpdate() {
+                    Map<String, Object> nodeConfig = new HashMap<>();
+                    nodeConfig.put("system.id", selfAdr.hashCode());
+                    nodeConfig.put("example.val", "port is" + selfAdr.getPort());
+                    return nodeConfig;
+                }
+            };
         }
-
-        @Override
-        public Class getComponentDefinition() {
-          return ConfigReadingComp.class;
-        }
-
-        @Override
-        public ConfigReadingComp.ConfigReadingInit getComponentInit() {
-          return new ConfigReadingComp.ConfigReadingInit();
-        }
-
-        @Override
-        public Map<String, Object> initConfigUpdate() {
-          Map<String, Object> nodeConfig = new HashMap<>();
-          nodeConfig.put("system.id", selfAdr.hashCode());
-          nodeConfig.put("example.val", "port is" + selfAdr.getPort());
-          return nodeConfig;
-        }
-      };
-    }
-  };
-
-  public static SimulationScenario simpleBoot() {
-    SimulationScenario scen = new SimulationScenario() {
-      {
-        StochasticProcess startPeers = new StochasticProcess() {
-          {
-            eventInterArrivalTime(constant(1000));
-            raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
-          }
-        };
-
-        startPeers.start();
-        terminateAfterTerminationOf(20000, startPeers);
-      }
     };
 
-    return scen;
-  }
+    @SuppressWarnings("serial")
+    public static SimulationScenario simpleBoot() {
+        SimulationScenario scen = new SimulationScenario() {
+            {
+                StochasticProcess startPeers = new StochasticProcess() {
+                    {
+                        eventInterArrivalTime(constant(1000));
+                        raise(4, startNodeOp, new BasicIntSequentialDistribution(1));
+                    }
+                };
+
+                startPeers.start();
+                terminateAfterTerminationOf(20000, startPeers);
+            }
+        };
+
+        return scen;
+    }
 }

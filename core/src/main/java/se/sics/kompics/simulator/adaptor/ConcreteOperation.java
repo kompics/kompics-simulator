@@ -30,8 +30,8 @@ import se.sics.kompics.simulator.adaptor.distributions.Distribution;
  * @author Cosmin Arad <cosmin@sics.se>
  * @version $Id$
  */
-public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 extends Number, 
-        P3 extends Number, P4 extends Number, P5 extends Number> implements Serializable {
+public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 extends Number, P3 extends Number, P4 extends Number, P5 extends Number>
+        implements Serializable {
 
     private static final long serialVersionUID = 2937585392288426864L;
 
@@ -80,8 +80,7 @@ public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 ext
         distribution5 = null;
     }
 
-    public ConcreteOperation(Operation2<E, P1, P2> op2, Distribution<P1> d1,
-            Distribution<P2> d2) {
+    public ConcreteOperation(Operation2<E, P1, P2> op2, Distribution<P1> d1, Distribution<P2> d2) {
         paramCount = 2;
         operation = null;
         operation1 = null;
@@ -96,8 +95,8 @@ public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 ext
         distribution5 = null;
     }
 
-    public ConcreteOperation(Operation3<E, P1, P2, P3> op3,
-            Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3) {
+    public ConcreteOperation(Operation3<E, P1, P2, P3> op3, Distribution<P1> d1, Distribution<P2> d2,
+            Distribution<P3> d3) {
         paramCount = 3;
         operation = null;
         operation1 = null;
@@ -112,9 +111,8 @@ public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 ext
         distribution5 = null;
     }
 
-    public ConcreteOperation(Operation4<E, P1, P2, P3, P4> op4,
-            Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3,
-            Distribution<P4> d4) {
+    public ConcreteOperation(Operation4<E, P1, P2, P3, P4> op4, Distribution<P1> d1, Distribution<P2> d2,
+            Distribution<P3> d3, Distribution<P4> d4) {
         paramCount = 4;
         operation = null;
         operation1 = null;
@@ -129,9 +127,8 @@ public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 ext
         distribution5 = null;
     }
 
-    public ConcreteOperation(Operation5<E, P1, P2, P3, P4, P5> op5,
-            Distribution<P1> d1, Distribution<P2> d2, Distribution<P3> d3,
-            Distribution<P4> d4, Distribution<P5> d5) {
+    public ConcreteOperation(Operation5<E, P1, P2, P3, P4, P5> op5, Distribution<P1> d1, Distribution<P2> d2,
+            Distribution<P3> d3, Distribution<P4> d4, Distribution<P5> d5) {
         paramCount = 5;
         operation = null;
         operation1 = null;
@@ -148,21 +145,20 @@ public class ConcreteOperation<E extends KompicsEvent, P1 extends Number, P2 ext
 
     public E generate() {
         switch (paramCount) {
-            case 1:
-                return operation1.generate(distribution1.draw());
-            case 2:
-                return operation2.generate(distribution1.draw(), distribution2.draw());
-            case 3:
-                return operation3.generate(distribution1.draw(), distribution2.draw(),
-                        distribution3.draw());
-            case 4:
-                return operation4.generate(distribution1.draw(), distribution2.draw(), 
-                        distribution3.draw(), distribution4.draw());
-            case 5:
-                return operation5.generate(distribution1.draw(), distribution2.draw(), 
-                        distribution3.draw(), distribution4.draw(), distribution5.draw());
-            default:
-                return operation.generate();
+        case 1:
+            return operation1.generate(distribution1.draw());
+        case 2:
+            return operation2.generate(distribution1.draw(), distribution2.draw());
+        case 3:
+            return operation3.generate(distribution1.draw(), distribution2.draw(), distribution3.draw());
+        case 4:
+            return operation4.generate(distribution1.draw(), distribution2.draw(), distribution3.draw(),
+                    distribution4.draw());
+        case 5:
+            return operation5.generate(distribution1.draw(), distribution2.draw(), distribution3.draw(),
+                    distribution4.draw(), distribution5.draw());
+        default:
+            return operation.generate();
         }
     }
 }

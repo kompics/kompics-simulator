@@ -26,8 +26,7 @@ import java.util.Random;
  * The <code>LongExponentialDistribution</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: LongExponentialDistribution.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: LongExponentialDistribution.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public class LongExponentialDistribution extends Distribution<Long> {
     private static final long serialVersionUID = 1760380746716287473L;

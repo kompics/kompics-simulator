@@ -29,8 +29,9 @@ import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
  */
 public class DisconnectedNodesNetworkModel extends BinaryNetworkModel {
 
-    public DisconnectedNodesNetworkModel(IdentifierExtractor idE, NetworkModel baseNM, Set<Identifier> disconnectedNodes) {
-        super(idE,baseNM, NetworkModels.withTotalLoss(), disconnectedNodes);
+    public DisconnectedNodesNetworkModel(IdentifierExtractor idE, NetworkModel baseNM,
+            Set<Identifier> disconnectedNodes) {
+        super(idE, baseNM, NetworkModels.withTotalLoss(), disconnectedNodes);
     }
 
     @Override

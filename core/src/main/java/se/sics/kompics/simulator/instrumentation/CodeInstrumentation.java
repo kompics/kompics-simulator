@@ -32,11 +32,11 @@ import se.sics.kompics.simulator.core.impl.P2pSimulator;
  */
 public class CodeInstrumentation {
 
-    //LOGS
+    // LOGS
     public static final Logger INSTRUMENTATION_LOG = LoggerFactory.getLogger("CodeInstrumentation");
-    private static final Logger STATISTICS_LOG = LoggerFactory.getLogger("SimulationStatistics");
+    // private static final Logger STATISTICS_LOG = LoggerFactory.getLogger("SimulationStatistics");
 
-    //EXCEPTIONS
+    // EXCEPTIONS
     public static final String INTERCEPTOR_EXCEPTIONS = "instrumentation.exceptions";
     public static final Set<String> instrumentationExceptedClass = new HashSet<>();
 
@@ -66,7 +66,7 @@ public class CodeInstrumentation {
         Set<String> exceptions = new HashSet<>();
         try {
             exceptions.addAll(config.getStringList(INTERCEPTOR_EXCEPTIONS));
-        } catch(ConfigException.Missing e) {
+        } catch (ConfigException.Missing e) {
             INSTRUMENTATION_LOG.info("no user defined instrumentation exceptions detected");
         }
         return exceptions;

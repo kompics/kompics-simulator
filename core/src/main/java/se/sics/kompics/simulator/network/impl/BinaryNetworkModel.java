@@ -32,21 +32,23 @@ public class BinaryNetworkModel implements NetworkModel {
 
     private final IdentifierExtractor idE;
     private final NetworkModel firstNM;
-	private final NetworkModel secondNM;
-	private final Set<Identifier> selectedNodes;
+    private final NetworkModel secondNM;
+    private final Set<Identifier> selectedNodes;
 
-	public BinaryNetworkModel(IdentifierExtractor idE, NetworkModel firstNM, NetworkModel secondNM, Set<Identifier> selectedNodes) {
+    public BinaryNetworkModel(IdentifierExtractor idE, NetworkModel firstNM, NetworkModel secondNM,
+            Set<Identifier> selectedNodes) {
         this.idE = idE;
         this.firstNM = firstNM;
-		this.secondNM = secondNM;
+        this.secondNM = secondNM;
         this.selectedNodes = selectedNodes;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
         Identifier srcId = idE.extract(message.getHeader().getSource());
         Identifier dstId = idE.extract(message.getHeader().getDestination());
-        if (selectedNodes.contains(srcId) || selectedNodes.contains(dstId))  {
+        if (selectedNodes.contains(srcId) || selectedNodes.contains(dstId)) {
             return secondNM.getLatencyMs(message);
         }
         return firstNM.getLatencyMs(message);

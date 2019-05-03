@@ -31,13 +31,13 @@ public abstract class SetupEvent extends SimulationEvent {
     public SetupEvent() {
         super();
     }
-    
+
     public void setupSystemContext() {
     }
-    
+
     public void setupGlobalView(GlobalView gv) {
     }
-    
+
     public IdentifierExtractor getIdentifierExtractor() {
         return new SocketIdExtractor();
     }

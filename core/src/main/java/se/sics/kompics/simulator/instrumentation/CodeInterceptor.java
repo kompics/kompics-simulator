@@ -28,7 +28,6 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 import javassist.Translator;
-import org.slf4j.Logger;
 import se.sics.kompics.simulator.core.SimulatorSystem;
 
 /**
@@ -39,7 +38,7 @@ import se.sics.kompics.simulator.core.SimulatorSystem;
  */
 public class CodeInterceptor implements Translator {
 
-    private static final Logger LOG = CodeInstrumentation.INSTRUMENTATION_LOG;
+    // private static final Logger LOG = CodeInstrumentation.INSTRUMENTATION_LOG;
     public static final String DEFAULT_REDIRECT = SimulatorSystem.class.getName();
 
     private final File directory;
@@ -62,19 +61,19 @@ public class CodeInterceptor implements Translator {
 
     @Override
     public void onLoad(ClassPool pool, String classname) throws NotFoundException, CannotCompileException {
-//        if (classname.equalsIgnoreCase("org.codehaus.janino.ScriptEvaluator")) {
-//            System.out.println(CodeInstrumentation.instrumentationExceptedClass);
-//        }
+        // if (classname.equalsIgnoreCase("org.codehaus.janino.ScriptEvaluator")) {
+        // System.out.println(CodeInstrumentation.instrumentationExceptedClass);
+        // }
         if (isException(pool, classname)) {
             return;
         }
 
         CtClass cc = pool.get(classname);
         cc.defrost();
-        
-//        if (JavaComponent.class.getName().equals(classname)) {
-//            decorateHandlers(pool, cc);
-//        }
+
+        // if (JavaComponent.class.getName().equals(classname)) {
+        // decorateHandlers(pool, cc);
+        // }
         cc.instrument(new BaseEditor(redirect, allowThreads));
         saveClass(cc);
     }
@@ -84,15 +83,15 @@ public class CodeInterceptor implements Translator {
         String auxClassname = null;
         while (st.hasMoreTokens()) {
             auxClassname = (auxClassname == null ? st.nextToken() : auxClassname + "$" + st.nextToken());
-            //System.out.print("AuxClass: " + auxClassname);
+            // System.out.print("AuxClass: " + auxClassname);
             if (CodeInstrumentation.instrumentationExceptedClass.contains(auxClassname)) {
-//                System.out.println("AuxClass: " + auxClassname + " is exception");
+                // System.out.println("AuxClass: " + auxClassname + " is exception");
                 return true;
             }
         }
         return false;
     }
-    
+
     private void saveClass(CtClass cc) {
         if (directory != null) {
             try {
@@ -104,30 +103,30 @@ public class CodeInterceptor implements Translator {
             }
         }
     }
-    
-//    private void decorateHandlers(ClassPool pool, CtClass cc) throws NotFoundException, CannotCompileException {
-//
-//        //decorate simple handler
-//        CtClass[] simple = new CtClass[]{
-//            pool.get(KompicsEvent.class.getName()),
-//            pool.get(Handler.class.getName())};
-//        CtMethod simpleHandler = cc.getDeclaredMethod("executeEvent", simple);
-//
-//        simpleHandler.insertBefore(
-//                "{ " + 
-//                        HandlerDecorators.class.getName() + ".beforeHandler($0, $1, $2); }");
-//        simpleHandler.insertAfter(
-//                "{ " + HandlerDecorators.class.getName() + ".afterHandler($0, $1, $2); }");
-//
-//        CtClass[] pattern = new CtClass[]{
-//            pool.get(PatternExtractor.class.getName()),
-//            pool.get(MatchedHandler.class.getName())};
-//        CtMethod patternHandler = cc.getDeclaredMethod("executeEvent", pattern);
-//
-//        patternHandler.insertBefore(
-//                "{ " + HandlerDecoratorRegistry.class.getName() + ".beforeHandler($0, $1, $2); }");
-//        patternHandler.insertAfter(
-//                "{ " + HandlerDecoratorRegistry.class.getName() + ".afterHandler($0, $1, $2); }");
-//    }
+
+    // private void decorateHandlers(ClassPool pool, CtClass cc) throws NotFoundException, CannotCompileException {
+    //
+    // //decorate simple handler
+    // CtClass[] simple = new CtClass[]{
+    // pool.get(KompicsEvent.class.getName()),
+    // pool.get(Handler.class.getName())};
+    // CtMethod simpleHandler = cc.getDeclaredMethod("executeEvent", simple);
+    //
+    // simpleHandler.insertBefore(
+    // "{ " +
+    // HandlerDecorators.class.getName() + ".beforeHandler($0, $1, $2); }");
+    // simpleHandler.insertAfter(
+    // "{ " + HandlerDecorators.class.getName() + ".afterHandler($0, $1, $2); }");
+    //
+    // CtClass[] pattern = new CtClass[]{
+    // pool.get(PatternExtractor.class.getName()),
+    // pool.get(MatchedHandler.class.getName())};
+    // CtMethod patternHandler = cc.getDeclaredMethod("executeEvent", pattern);
+    //
+    // patternHandler.insertBefore(
+    // "{ " + HandlerDecoratorRegistry.class.getName() + ".beforeHandler($0, $1, $2); }");
+    // patternHandler.insertAfter(
+    // "{ " + HandlerDecoratorRegistry.class.getName() + ".afterHandler($0, $1, $2); }");
+    // }
 
 }

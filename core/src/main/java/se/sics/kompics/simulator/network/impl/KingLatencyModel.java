@@ -64,6 +64,7 @@ public final class KingLatencyModel implements NetworkModel {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
         Identifier srcId = idE.extract(message.getHeader().getSource());
@@ -87,7 +88,8 @@ public final class KingLatencyModel implements NetworkModel {
 
         static {
             int king[][];
-            try (ObjectInputStream ois = new ObjectInputStream(KingMatrix.class.getResourceAsStream("KingMatrix.data"))) {
+            try (ObjectInputStream ois = new ObjectInputStream(
+                    KingMatrix.class.getResourceAsStream("KingMatrix.data"))) {
                 king = (int[][]) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 king = null;

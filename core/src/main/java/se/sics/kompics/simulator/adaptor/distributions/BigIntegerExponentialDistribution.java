@@ -29,8 +29,7 @@ import java.util.Random;
  * The <code>BigIntegerExponentialDistribution</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: BigIntegerExponentialDistribution.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: BigIntegerExponentialDistribution.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public class BigIntegerExponentialDistribution extends Distribution<BigInteger> {
 

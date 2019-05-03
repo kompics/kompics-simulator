@@ -32,22 +32,22 @@ import se.sics.kompics.simulator.examples.util.BasicAddress;
  */
 public class ScenarioSetup {
 
-  public static final Map<Integer, Address> nodeAddressMap = new HashMap<>();
-  public static final Map<Integer, Address> nodePing = new HashMap<>();
+    public static final Map<Integer, Address> nodeAddressMap = new HashMap<>();
+    public static final Map<Integer, Address> nodePing = new HashMap<>();
 
-  static {
-    try {
-      nodeAddressMap.put(1, new BasicAddress(InetAddress.getByName("193.0.0.1"), 12345));
-      nodeAddressMap.put(2, new BasicAddress(InetAddress.getByName("193.0.0.2"), 12346));
-      nodeAddressMap.put(3, new BasicAddress(InetAddress.getByName("193.0.0.3"), 12347));
-      nodeAddressMap.put(4, new BasicAddress(InetAddress.getByName("193.0.0.4"), 12348));
+    static {
+        try {
+            nodeAddressMap.put(1, new BasicAddress(InetAddress.getByName("193.0.0.1"), 12345));
+            nodeAddressMap.put(2, new BasicAddress(InetAddress.getByName("193.0.0.2"), 12346));
+            nodeAddressMap.put(3, new BasicAddress(InetAddress.getByName("193.0.0.3"), 12347));
+            nodeAddressMap.put(4, new BasicAddress(InetAddress.getByName("193.0.0.4"), 12348));
 
-      nodePing.put(1, nodeAddressMap.get(2));
-      nodePing.put(2, nodeAddressMap.get(3));
-      nodePing.put(3, nodeAddressMap.get(4));
-      nodePing.put(4, nodeAddressMap.get(1));
-    } catch (UnknownHostException ex) {
-      throw new RuntimeException(ex);
+            nodePing.put(1, nodeAddressMap.get(2));
+            nodePing.put(2, nodeAddressMap.get(3));
+            nodePing.put(3, nodeAddressMap.get(4));
+            nodePing.put(4, nodeAddressMap.get(1));
+        } catch (UnknownHostException ex) {
+            throw new RuntimeException(ex);
+        }
     }
-  }
 }

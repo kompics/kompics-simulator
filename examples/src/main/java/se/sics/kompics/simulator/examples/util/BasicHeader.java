@@ -27,40 +27,40 @@ import se.sics.kompics.network.Transport;
  */
 public class BasicHeader<Adr extends Address> implements Header<Adr> {
 
-  private final Adr src;
-  private final Adr dst;
-  private final Transport protocol;
+    private final Adr src;
+    private final Adr dst;
+    private final Transport protocol;
 
-  public BasicHeader(Adr src, Adr dst, Transport protocol) {
-    this.src = src;
-    this.dst = dst;
-    this.protocol = protocol;
-  }
+    public BasicHeader(Adr src, Adr dst, Transport protocol) {
+        this.src = src;
+        this.dst = dst;
+        this.protocol = protocol;
+    }
 
-  @Override
-  public Adr getSource() {
-    return src;
-  }
+    @Override
+    public Adr getSource() {
+        return src;
+    }
 
-  @Override
-  public Adr getDestination() {
-    return dst;
-  }
+    @Override
+    public Adr getDestination() {
+        return dst;
+    }
 
-  @Override
-  public Transport getProtocol() {
-    return protocol;
-  }
+    @Override
+    public Transport getProtocol() {
+        return protocol;
+    }
 
-  public BasicHeader<Adr> withSource(Adr source) {
-    return new BasicHeader<>(source, dst, protocol);
-  }
+    public BasicHeader<Adr> withSource(Adr source) {
+        return new BasicHeader<>(source, dst, protocol);
+    }
 
-  public BasicHeader<Adr> withDestination(Adr destination) {
-    return new BasicHeader<>(src, destination, protocol);
-  }
+    public BasicHeader<Adr> withDestination(Adr destination) {
+        return new BasicHeader<>(src, destination, protocol);
+    }
 
-  public BasicHeader<Adr> answer() {
-    return new BasicHeader<>(dst, src, protocol);
-  }
+    public BasicHeader<Adr> answer() {
+        return new BasicHeader<>(dst, src, protocol);
+    }
 }

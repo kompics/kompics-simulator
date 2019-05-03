@@ -24,10 +24,11 @@ import se.sics.kompics.simulator.adaptor.distributions.Distribution;
 /**
  * @author Alex Ormenisan <aaor@sics.se>
  */
+@SuppressWarnings("serial")
 public class GenIntSequentialDistribution extends Distribution<Integer> {
     private final BasicIntSequentialDistribution indexDist;
     private final Integer[] sequence;
-    
+
     public GenIntSequentialDistribution(Integer[] sequence) {
         super(Type.OTHER, Integer.class);
         this.sequence = sequence;
@@ -37,7 +38,7 @@ public class GenIntSequentialDistribution extends Distribution<Integer> {
     @Override
     public Integer draw() {
         int index = indexDist.draw();
-        if(index < sequence.length) {
+        if (index < sequence.length) {
             return sequence[index];
         } else {
             return null;

@@ -1,5 +1,3 @@
-package se.sics.kompics.simulator.examples.config.sim;
-
 /*
  * Copyright (C) 2009 Swedish Institute of Computer Science (SICS) Copyright (C)
  * 2009 Royal Institute of Technology (KTH)
@@ -18,7 +16,9 @@ package se.sics.kompics.simulator.examples.config.sim;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-import org.junit.Test;
+package se.sics.kompics.simulator.examples.config.sim;
+
+import org.junit.jupiter.api.Test;
 import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.run.LauncherComp;
 
@@ -27,11 +27,11 @@ import se.sics.kompics.simulator.run.LauncherComp;
  */
 public class SimConfigTest {
 
-  @Test
-  public void testConfig() {
-    long seed = 123;
-    SimulationScenario.setSeed(seed);
-    SimulationScenario simpleBootScenario = ScenarioGen.simpleBoot();
-    simpleBootScenario.simulate(LauncherComp.class);
-  }
+    @Test
+    public void testConfig() {
+        long seed = 123;
+        SimulationScenario.setSeed(seed);
+        SimulationScenario simpleBootScenario = ScenarioGen.simpleBoot();
+        simpleBootScenario.simulate(LauncherComp.class);
+    }
 }

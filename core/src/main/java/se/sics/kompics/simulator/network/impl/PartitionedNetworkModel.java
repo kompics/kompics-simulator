@@ -18,7 +18,6 @@
  */
 package se.sics.kompics.simulator.network.impl;
 
-import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 import se.sics.kompics.simulator.network.PartitionMapper;
@@ -32,14 +31,15 @@ public class PartitionedNetworkModel implements NetworkModel {
 
     private final IdentifierExtractor idE;
     private final NetworkModel netModel;
-    private final PartitionMapper mapper;
+    private final PartitionMapper<Identifier> mapper;
 
-    public PartitionedNetworkModel(IdentifierExtractor idE, NetworkModel netModel, PartitionMapper mapper) {
+    public PartitionedNetworkModel(IdentifierExtractor idE, NetworkModel netModel, PartitionMapper<Identifier> mapper) {
         this.idE = idE;
         this.netModel = netModel;
         this.mapper = mapper;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
         Identifier srcId = idE.extract(message.getHeader().getSource());

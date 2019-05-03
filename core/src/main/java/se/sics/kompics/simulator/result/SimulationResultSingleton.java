@@ -25,9 +25,9 @@ import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Freely adapted from
- * <http://surguy.net/articles/communication-across-classloaders.xml>.
+ * Freely adapted from <http://surguy.net/articles/communication-across-classloaders.xml>.
  * <p>
+ * 
  * @author Lars Kroll <lkroll@kth.se>
  */
 public class SimulationResultSingleton implements SimulationResultMap {
@@ -43,11 +43,12 @@ public class SimulationResultSingleton implements SimulationResultMap {
             } else {
                 try {
                     ClassLoader parentClassLoader = SimulationResultSingleton.class.getClassLoader().getParent();
-                    Class otherClassInstance = parentClassLoader.loadClass(SimulationResultSingleton.class.getName());
-                    Method getInstanceMethod = otherClassInstance.getDeclaredMethod("getInstance", new Class[]{});
-                    Object otherAbsoluteSingleton = getInstanceMethod.invoke(null, new Object[]{});
+                    Class<?> otherClassInstance = parentClassLoader
+                            .loadClass(SimulationResultSingleton.class.getName());
+                    Method getInstanceMethod = otherClassInstance.getDeclaredMethod("getInstance", new Class[] {});
+                    Object otherAbsoluteSingleton = getInstanceMethod.invoke(null, new Object[] {});
                     instance = (SimulationResultMap) Proxy.newProxyInstance(myClassLoader,
-                            new Class[]{SimulationResultMap.class},
+                            new Class[] { SimulationResultMap.class },
                             new PassThroughProxyHandler(otherAbsoluteSingleton));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -68,6 +69,7 @@ public class SimulationResultSingleton implements SimulationResultMap {
         entries.put(key, o);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T get(String key, Class<T> tpe) {
         return (T) entries.get(key);

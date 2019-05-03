@@ -25,5 +25,6 @@ package se.sics.kompics.simulator.result;
  */
 public interface SimulationResultMap {
     public void put(String key, Object o);
+
     public <T> T get(String key, Class<T> tpe);
 }

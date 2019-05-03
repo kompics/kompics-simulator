@@ -21,7 +21,6 @@ package se.sics.kompics.simulator.network.impl;
 
 import java.util.Set;
 import org.javatuples.Pair;
-import se.sics.kompics.network.Address;
 import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 import se.sics.kompics.simulator.network.identifier.Identifier;
@@ -34,22 +33,25 @@ public class DeadLinkNetworkModel implements NetworkModel {
     private final IdentifierExtractor idE;
     private final NetworkModel baseNM;
     private final Set<Pair<Identifier, Identifier>> deadLinks;
-    
+
     /**
      * @param baseNM
-     * @param deadLinks &lt;hostId, hostId&gt;
+     * @param deadLinks
+     *            &lt;hostId, hostId&gt;
      */
-    public DeadLinkNetworkModel(IdentifierExtractor idE, NetworkModel baseNM, Set<Pair<Identifier, Identifier>> deadLinks) {
+    public DeadLinkNetworkModel(IdentifierExtractor idE, NetworkModel baseNM,
+            Set<Pair<Identifier, Identifier>> deadLinks) {
         this.idE = idE;
         this.baseNM = baseNM;
         this.deadLinks = deadLinks;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
         Identifier srcId = idE.extract(message.getHeader().getSource());
         Identifier dstId = idE.extract(message.getHeader().getDestination());
-        if(deadLinks.contains(Pair.with(srcId, dstId))) {
+        if (deadLinks.contains(Pair.with(srcId, dstId))) {
             return -1;
         } else {
             return baseNM.getLatencyMs(message);

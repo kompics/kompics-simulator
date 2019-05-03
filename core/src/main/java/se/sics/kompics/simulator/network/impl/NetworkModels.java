@@ -35,81 +35,86 @@ import java.util.Set;
  */
 public class NetworkModels {
 
-	public static NetworkModel withConstantDelay(final long delay) {
-		return new NetworkModel() {
-			@Override
-			public long getLatencyMs(Msg message) {
-				return delay;
-			}
-		};
-	}
+    public static NetworkModel withConstantDelay(final long delay) {
+        return new NetworkModel() {
+            @SuppressWarnings("rawtypes")
+            @Override
+            public long getLatencyMs(Msg message) {
+                return delay;
+            }
+        };
+    }
 
-	public static UniformRandomModel withUniformRandomDelay(long min, long max) {
-		return new UniformRandomModel(min, max);
-	}
+    public static UniformRandomModel withUniformRandomDelay(long min, long max) {
+        return new UniformRandomModel(min, max);
+    }
 
-	public static UniformRandomModel withUniformRandomDelay(long min, long max, Random rand) {
-		return new UniformRandomModel(min, max, rand);
-	}
+    public static UniformRandomModel withUniformRandomDelay(long min, long max, Random rand) {
+        return new UniformRandomModel(min, max, rand);
+    }
 
-	public static BasicLossyLinkModel withLoss(NetworkModel baseModel, int lossRate, Random rand) {
-		return new BasicLossyLinkModel(baseModel, lossRate, rand);
-	}
+    public static BasicLossyLinkModel withLoss(NetworkModel baseModel, int lossRate, Random rand) {
+        return new BasicLossyLinkModel(baseModel, lossRate, rand);
+    }
 
-	public static BasicLossyLinkModel withLoss(NetworkModel baseModel, int lossRate) {
-		return new BasicLossyLinkModel(baseModel, lossRate, new Random(1));
-	}
+    public static BasicLossyLinkModel withLoss(NetworkModel baseModel, int lossRate) {
+        return new BasicLossyLinkModel(baseModel, lossRate, new Random(1));
+    }
 
-	public static NetworkModel withTotalLoss() {
-		return NetworkModels.withConstantDelay(-1); 
-	}
+    public static NetworkModel withTotalLoss() {
+        return NetworkModels.withConstantDelay(-1);
+    }
 
-	public static DeadLinkNetworkModel withDeadLinks(IdentifierExtractor idE, NetworkModel baseNM, Set<Pair<Identifier, Identifier>> deadLinks) {
-		return new DeadLinkNetworkModel(idE, baseNM, deadLinks);
-	}
+    public static DeadLinkNetworkModel withDeadLinks(IdentifierExtractor idE, NetworkModel baseNM,
+            Set<Pair<Identifier, Identifier>> deadLinks) {
+        return new DeadLinkNetworkModel(idE, baseNM, deadLinks);
+    }
 
-	public static KingLatencyModel withKingLatency(IdentifierExtractor extractor) {
-		return new KingLatencyModel(extractor);
-	}
+    public static KingLatencyModel withKingLatency(IdentifierExtractor extractor) {
+        return new KingLatencyModel(extractor);
+    }
 
-	public static KingLatencyModel withKingLatency(IdentifierExtractor extractor, int seed) {
-		return new KingLatencyModel(extractor, seed);
-	}
+    public static KingLatencyModel withKingLatency(IdentifierExtractor extractor, int seed) {
+        return new KingLatencyModel(extractor, seed);
+    }
 
-	public static BinaryNetworkModel withBinaryModel(IdentifierExtractor extr, NetworkModel firstNM, NetworkModel secondNM, Set<Identifier> secondModelIDs) {
-		return new BinaryNetworkModel(extr, firstNM, secondNM, secondModelIDs);
-	}
+    public static BinaryNetworkModel withBinaryModel(IdentifierExtractor extr, NetworkModel firstNM,
+            NetworkModel secondNM, Set<Identifier> secondModelIDs) {
+        return new BinaryNetworkModel(extr, firstNM, secondNM, secondModelIDs);
+    }
 
-	public static DisconnectedNodesNetworkModel withDisconnectedModel(IdentifierExtractor extr, NetworkModel firstNM, Set<Identifier> disconnected) {
-		return new DisconnectedNodesNetworkModel(extr, firstNM, disconnected);
-	}
-	
-	public static SelectiveModelBuilder withSelectiveModel(IdentifierExtractor extractor, NetworkModel firstNM){
-		return new SelectiveModelBuilder(firstNM, extractor);
-	}
-	
-	public static PartitionedNetworkModel withPartitionedModel(IdentifierExtractor extractor, NetworkModel model, PartitionMapper mapper){
-		return new PartitionedNetworkModel(extractor, model, mapper);
-	}
+    public static DisconnectedNodesNetworkModel withDisconnectedModel(IdentifierExtractor extr, NetworkModel firstNM,
+            Set<Identifier> disconnected) {
+        return new DisconnectedNodesNetworkModel(extr, firstNM, disconnected);
+    }
 
-	protected static class SelectiveModelBuilder {
-		private final NetworkModel baseModel;
-		private final IdentifierExtractor extr;
-		private Set<Identifier> nodes = new HashSet<>();
+    public static SelectiveModelBuilder withSelectiveModel(IdentifierExtractor extractor, NetworkModel firstNM) {
+        return new SelectiveModelBuilder(firstNM, extractor);
+    }
 
-		public SelectiveModelBuilder(NetworkModel baseModel, IdentifierExtractor extr) {
-			this.baseModel = baseModel;
-			this.extr = extr;
-		}
+    public static PartitionedNetworkModel withPartitionedModel(IdentifierExtractor extractor, NetworkModel model,
+            PartitionMapper<Identifier> mapper) {
+        return new PartitionedNetworkModel(extractor, model, mapper);
+    }
 
-		public SelectiveModelBuilder addNode(Identifier identifier) {
-			nodes.add(identifier);
-			return this;
-		}
+    protected static class SelectiveModelBuilder {
+        private final NetworkModel baseModel;
+        private final IdentifierExtractor extr;
+        private Set<Identifier> nodes = new HashSet<>();
 
-		public BinaryNetworkModel withSelectiveModel(NetworkModel model) {
-			return new BinaryNetworkModel(extr, baseModel, model, nodes);
-		}
-	}
+        public SelectiveModelBuilder(NetworkModel baseModel, IdentifierExtractor extr) {
+            this.baseModel = baseModel;
+            this.extr = extr;
+        }
+
+        public SelectiveModelBuilder addNode(Identifier identifier) {
+            nodes.add(identifier);
+            return this;
+        }
+
+        public BinaryNetworkModel withSelectiveModel(NetworkModel model) {
+            return new BinaryNetworkModel(extr, baseModel, model, nodes);
+        }
+    }
 
 }

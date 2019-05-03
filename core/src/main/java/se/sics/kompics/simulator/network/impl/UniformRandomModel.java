@@ -27,25 +27,26 @@ import se.sics.kompics.simulator.network.NetworkModel;
  * @author Lars Kroll <lkroll@sics.se>
  */
 public class UniformRandomModel implements NetworkModel {
-    
+
     private final long min;
     private final long max;
     private final long diff;
     private final Random rand;
-    
+
     public UniformRandomModel(long min, long max) {
         this(min, max, new Random(1));
     }
-    
+
     public UniformRandomModel(long min, long max, Random rand) {
         this.min = min;
         this.max = max;
-        this.diff = max - min;
+        this.diff = this.max - this.min;
         this.rand = rand;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
-        return min + (long)Math.floor(rand.nextDouble() * diff);
+        return min + (long) Math.floor(rand.nextDouble() * diff);
     }
 }

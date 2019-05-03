@@ -28,11 +28,11 @@ import se.sics.kompics.simulator.network.NetworkModel;
  */
 public class BasicLossyLinkModel implements NetworkModel {
     private final NetworkModel baseNM;
-    private final int lossRatePercentage; //in percentage
+    private final int lossRatePercentage; // in percentage
     private final Random rand;
-    
+
     public BasicLossyLinkModel(NetworkModel baseNM, int lossRatePercentage, Random rand) {
-        if( lossRatePercentage > 100 || lossRatePercentage < 0 ){
+        if (lossRatePercentage > 100 || lossRatePercentage < 0) {
             throw new RuntimeException("Loss Percentage Range 0  - 100 ");
         }
         this.baseNM = baseNM;
@@ -40,12 +40,13 @@ public class BasicLossyLinkModel implements NetworkModel {
         this.rand = rand;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public long getLatencyMs(Msg message) {
         int lossChance = rand.nextInt(101);
-        if(lossChance > (100 - lossRatePercentage)) {
+        if (lossChance > (100 - lossRatePercentage)) {
 
-//            System.out.println(" Choking the link .... ");
+            // System.out.println(" Choking the link .... ");
             return -1;
         }
         return baseNM.getLatencyMs(message);

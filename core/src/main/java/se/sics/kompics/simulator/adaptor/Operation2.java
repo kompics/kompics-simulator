@@ -30,8 +30,7 @@ import se.sics.kompics.KompicsEvent;
  * @author Cosmin Arad <cosmin@sics.se>
  * @version $Id$
  */
-public interface Operation2<E extends KompicsEvent, P1 extends Number, P2 extends Number>
-        extends Serializable {
+public interface Operation2<E extends KompicsEvent, P1 extends Number, P2 extends Number> extends Serializable {
 
     public E generate(P1 parameter1, P2 parameter2);
 }

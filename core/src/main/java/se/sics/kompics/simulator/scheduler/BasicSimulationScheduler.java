@@ -58,7 +58,7 @@ public class BasicSimulationScheduler extends Scheduler implements SimulationSch
             ok = simulator.advanceSimulation();
         }
 
-        //TODO Alex - should I actually do this? - does it really matter?
+        // TODO Alex - should I actually do this? - does it really matter?
         // execute all scheduled events after simulation terminates
         while (!readyQueue.isEmpty()) {
             Component component = readyQueue.poll();

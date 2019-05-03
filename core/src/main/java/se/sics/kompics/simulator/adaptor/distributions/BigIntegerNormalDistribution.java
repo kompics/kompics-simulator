@@ -29,8 +29,7 @@ import java.util.Random;
  * The <code>BigIntegerNormalDistribution</code> class.
  *
  * @author Cosmin Arad <cosmin@sics.se>
- * @version $Id: BigIntegerNormalDistribution.java 750 2009-04-02 09:55:01Z
- * Cosmin $
+ * @version $Id: BigIntegerNormalDistribution.java 750 2009-04-02 09:55:01Z Cosmin $
  */
 public class BigIntegerNormalDistribution extends Distribution<BigInteger> {
 
@@ -44,8 +43,7 @@ public class BigIntegerNormalDistribution extends Distribution<BigInteger> {
     private double u2;
     private boolean first;
 
-    public BigIntegerNormalDistribution(BigInteger mean, BigInteger variance,
-            Random random) {
+    public BigIntegerNormalDistribution(BigInteger mean, BigInteger variance, Random random) {
         super(Type.NORMAL, BigInteger.class);
         this.random = random;
         this.mean = new BigDecimal(mean);
@@ -59,16 +57,12 @@ public class BigIntegerNormalDistribution extends Distribution<BigInteger> {
             first = false;
             u1 = random.nextDouble();
             u2 = random.nextDouble();
-            BigDecimal d = new BigDecimal(Math.sqrt(-2 * Math.log(u1))
-                    * Math.cos(2 * Math.PI * u2));
-            return d.multiply(variance).add(mean).round(MathContext.UNLIMITED)
-                    .toBigInteger();
+            BigDecimal d = new BigDecimal(Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2));
+            return d.multiply(variance).add(mean).round(MathContext.UNLIMITED).toBigInteger();
         } else {
             first = true;
-            BigDecimal d = new BigDecimal(Math.sqrt(-2 * Math.log(u1))
-                    * Math.sin(2 * Math.PI * u2));
-            return d.multiply(variance).add(mean).round(MathContext.UNLIMITED)
-                    .toBigInteger();
+            BigDecimal d = new BigDecimal(Math.sqrt(-2 * Math.log(u1)) * Math.sin(2 * Math.PI * u2));
+            return d.multiply(variance).add(mean).round(MathContext.UNLIMITED).toBigInteger();
         }
     }
 }

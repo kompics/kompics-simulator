@@ -78,8 +78,7 @@ public class SimulatorSystem {
             return;
         }
         throw new RuntimeException(
-                "No simulator is yet set. Attempted to start a thread at "
-                + Thread.currentThread().getStackTrace()[2]);
+                "No simulator is yet set. Attempted to start a thread at " + Thread.currentThread().getStackTrace()[2]);
     }
 
     // java.util.TimeZone.getDefault() redirected here

@@ -19,10 +19,8 @@ package se.sics.kompics.simulator.core.impl;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.util.GlobalView;
@@ -85,8 +83,9 @@ public class GlobalViewImpl implements GlobalView {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T getValue(String key, Class<T> type) throws ClassCastException {
-        return (T)otherContext.get(key);
+        return (T) otherContext.get(key);
     }
 }
