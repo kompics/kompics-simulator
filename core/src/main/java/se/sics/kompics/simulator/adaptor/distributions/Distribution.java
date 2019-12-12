@@ -25,7 +25,7 @@ import java.io.Serializable;
 /**
  * The <code>Distribution</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public abstract class Distribution<E extends Number> implements Serializable {

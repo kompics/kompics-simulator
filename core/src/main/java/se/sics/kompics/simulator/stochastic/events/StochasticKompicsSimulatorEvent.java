@@ -25,7 +25,7 @@ import se.sics.kompics.KompicsEvent;
 /**
  * The <code>StochasticKompicsSimulatorEvent</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public class StochasticKompicsSimulatorEvent extends StochasticSimulatorEvent {

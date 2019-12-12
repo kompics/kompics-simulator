@@ -28,13 +28,14 @@ import org.slf4j.LoggerFactory;
 import se.sics.kompics.simulator.core.impl.P2pSimulator;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class CodeInstrumentation {
 
     // LOGS
     public static final Logger INSTRUMENTATION_LOG = LoggerFactory.getLogger("CodeInstrumentation");
-    // private static final Logger STATISTICS_LOG = LoggerFactory.getLogger("SimulationStatistics");
+    // private static final Logger STATISTICS_LOG =
+    // LoggerFactory.getLogger("SimulationStatistics");
 
     // EXCEPTIONS
     public static final String INTERCEPTOR_EXCEPTIONS = "instrumentation.exceptions";

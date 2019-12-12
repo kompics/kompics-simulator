@@ -29,8 +29,8 @@ import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 /**
  * The <code>KingLatencyMap</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
- * @author Tallat Shafaat <tallat@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
+ * @author Tallat Shafaat {@literal <tallat@sics.se>}
  * @version $Id$
  */
 public final class KingLatencyModel implements NetworkModel {

@@ -23,7 +23,7 @@ import se.sics.kompics.simulator.SimulationScenario;
 import se.sics.kompics.simulator.run.LauncherComp;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class BasicPingTest {
 

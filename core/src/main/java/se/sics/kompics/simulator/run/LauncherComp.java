@@ -35,7 +35,7 @@ import se.sics.kompics.simulator.scheduler.BasicSimulationScheduler;
 import se.sics.kompics.timer.Timer;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class LauncherComp extends ComponentDefinition {
 

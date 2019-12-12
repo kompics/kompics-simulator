@@ -31,7 +31,7 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * @author Paris Carbone <parisc@kth.se>
+ * @author Paris Carbone {@literal <parisc@kth.se>}
  */
 public class NetworkModels {
 

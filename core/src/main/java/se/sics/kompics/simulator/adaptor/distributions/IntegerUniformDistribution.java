@@ -22,7 +22,7 @@ package se.sics.kompics.simulator.adaptor.distributions;
 import java.util.Random;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 @SuppressWarnings("serial")
 public class IntegerUniformDistribution extends Distribution<Integer> {

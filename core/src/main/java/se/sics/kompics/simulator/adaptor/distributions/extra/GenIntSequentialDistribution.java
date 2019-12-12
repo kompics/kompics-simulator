@@ -22,7 +22,7 @@ package se.sics.kompics.simulator.adaptor.distributions.extra;
 import se.sics.kompics.simulator.adaptor.distributions.Distribution;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 @SuppressWarnings("serial")
 public class GenIntSequentialDistribution extends Distribution<Integer> {

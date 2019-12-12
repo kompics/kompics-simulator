@@ -21,7 +21,7 @@ package se.sics.kompics.simulator.scheduler;
 import se.sics.kompics.simulator.core.Simulator;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public interface SimulationScheduler {
     public void setSimulator(Simulator simulator);

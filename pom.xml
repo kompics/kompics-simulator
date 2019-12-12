@@ -3,7 +3,7 @@
     <groupId>se.sics.kompics.simulator</groupId>
     <artifactId>kompics-simulator-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 
     <name>Kompics Simulator</name>
     <url>http://kompics.sics.se</url>
@@ -35,11 +35,11 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <kompics.version>1.1.0</kompics.version>
+        <kompics.version>1.2.0</kompics.version>
 
         <junit.jupiter.version>5.4.2</junit.jupiter.version>
         
-        <javaassist.version>3.24.1-GA</javaassist.version>
+        <javaassist.version>3.26.0-GA</javaassist.version>
         <tuples.version>1.2</tuples.version>
     </properties>
 
@@ -111,69 +111,52 @@
                     <showDeprecations>true</showDeprecations>
                 </configuration>
             </plugin>
+           <plugin>
+				<groupId>net.revelc.code.formatter</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>2.11.0</version>
+				<configuration>
+					<configFile>${maven.multiModuleProjectDirectory}/eclipse-formatter-config.xml</configFile>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>format</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
             <plugin>
-                <groupId>net.revelc.code.formatter</groupId>
-                <artifactId>formatter-maven-plugin</artifactId>
-                <version>2.8.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                    </execution>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+					<linksource>true</linksource>
+					<source>1.8</source>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>package</phase>
-                        <goals><goal>jar-no-fork</goal></goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <!-- <execution> <id>attach-javadoc</id> <phase>verify</phase> <goals> 
-                    <goal>jar</goal> </goals> </execution> -->
-                    <execution>
-                        <id>aggregate</id>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                        <phase>site</phase>
-                        <configuration>
-                            <breakiterator>true</breakiterator>
-                            <charset>UTF-8</charset>
-                            <docencoding>UTF-8</docencoding>
-                            <windowtitle>
-                                Kompics Simulator ${project.version} API Documentation
-                            </windowtitle>
-                            <doctitle>
-                                Kompics Simulator ${project.version} API Documentation
-                            </doctitle>
-                            <encoding>UTF-8</encoding>
-                            <links>
-                                <link>http://java.sun.com/javase/6/docs/api/</link>
-                                <link>http://www.slf4j.org/api/</link>
-                            </links>
-                            <groups>
-                                <group>
-                                    <title>Kompics Simulator</title>
-                                    <packages>se.sics.kompics.simulator</packages>
-                                </group>
-                            </groups>
-                            <locale>en_US</locale>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+			</plugin>
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.4.2</version>

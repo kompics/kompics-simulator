@@ -25,7 +25,7 @@ import se.sics.kompics.simulator.events.system.SetupEvent;
 import se.sics.kompics.simulator.events.SystemEvent;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class SimulatorPort extends PortType {
     {

@@ -23,7 +23,7 @@ package se.sics.kompics.simulator.examples.networkModel;
 import java.util.UUID;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class Ping {
     private final UUID id;

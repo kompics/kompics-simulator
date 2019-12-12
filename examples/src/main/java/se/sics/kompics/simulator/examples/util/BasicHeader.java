@@ -23,7 +23,7 @@ import se.sics.kompics.network.Header;
 import se.sics.kompics.network.Transport;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class BasicHeader<Adr extends Address> implements Header<Adr> {
 

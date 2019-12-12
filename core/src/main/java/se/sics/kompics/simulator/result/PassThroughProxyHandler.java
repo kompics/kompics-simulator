@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 /**
  * Freely adapted from <http://surguy.net/articles/communication-across-classloaders.xml>.
  * 
- * @author Lars Kroll <lkroll@kth.se>
+ * @author Lars Kroll {@literal <lkroll@kth.se>}
  */
 class PassThroughProxyHandler implements InvocationHandler {
 

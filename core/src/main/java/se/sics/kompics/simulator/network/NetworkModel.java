@@ -22,12 +22,12 @@ package se.sics.kompics.simulator.network;
 import se.sics.kompics.network.Msg;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 /**
  * The <code>NetworkModel</code> class.
  * 
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id: NetworkModel.java 2362 2010-04-27 13:36:43Z jdowling $
  */
 public interface NetworkModel {

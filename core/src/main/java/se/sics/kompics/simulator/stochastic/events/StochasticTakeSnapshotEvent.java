@@ -25,7 +25,7 @@ import se.sics.kompics.simulator.events.TakeSnapshot;
 /**
  * The <code>StochasticTakeSnapshotEvent</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public final class StochasticTakeSnapshotEvent extends StochasticSimulatorEvent {

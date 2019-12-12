@@ -25,7 +25,7 @@ import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 import se.sics.kompics.simulator.util.GlobalView;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public abstract class SetupEvent extends SimulationEvent {
     public SetupEvent() {

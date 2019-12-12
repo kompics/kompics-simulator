@@ -23,7 +23,7 @@ package se.sics.kompics.simulator.network.identifier;
 import se.sics.kompics.network.Address;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public interface IdentifierExtractor {
     public Identifier extract(Address adr);

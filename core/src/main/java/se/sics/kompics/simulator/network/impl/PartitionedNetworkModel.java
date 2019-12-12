@@ -25,7 +25,7 @@ import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class PartitionedNetworkModel implements NetworkModel {
 

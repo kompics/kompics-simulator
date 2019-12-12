@@ -24,7 +24,7 @@ import se.sics.kompics.PatternExtractor;
 import se.sics.kompics.network.Msg;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 @SuppressWarnings("rawtypes")
 public abstract class GlobalViewHandler<E extends KompicsEvent, M extends Msg & PatternExtractor<Class<Object>, E>>

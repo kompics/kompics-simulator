@@ -24,7 +24,7 @@ import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class BasicLossyLinkModel implements NetworkModel {
     private final NetworkModel baseNM;

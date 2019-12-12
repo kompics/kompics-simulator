@@ -26,7 +26,7 @@ import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.events.SystemEvent;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public abstract class StartNodeEvent extends SystemEvent {
 

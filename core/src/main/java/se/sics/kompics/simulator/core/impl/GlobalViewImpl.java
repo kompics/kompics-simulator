@@ -26,7 +26,7 @@ import se.sics.kompics.simulator.network.identifier.Identifier;
 import se.sics.kompics.simulator.util.GlobalView;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class GlobalViewImpl implements GlobalView {
 

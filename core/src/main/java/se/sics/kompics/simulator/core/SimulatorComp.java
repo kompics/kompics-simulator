@@ -19,7 +19,7 @@
 package se.sics.kompics.simulator.core;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public interface SimulatorComp {
 }

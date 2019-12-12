@@ -22,7 +22,7 @@ package se.sics.kompics.simulator.network;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class PartitionMapperFactory {
     /**

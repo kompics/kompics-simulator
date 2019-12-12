@@ -26,7 +26,7 @@ import java.util.Objects;
 import se.sics.kompics.network.Address;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class BasicAddress implements Address {
 

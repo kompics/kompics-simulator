@@ -29,7 +29,7 @@ import se.sics.kompics.simulator.SimulationScenario;
 
 /**
  *
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class InstrumentationHelper {
 

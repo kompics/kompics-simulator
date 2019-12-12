@@ -25,7 +25,7 @@ import java.io.Serializable;
 /**
  * The <code>StochasticSimulatorEvent</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public class StochasticSimulatorEvent implements Comparable<StochasticSimulatorEvent>, Serializable {

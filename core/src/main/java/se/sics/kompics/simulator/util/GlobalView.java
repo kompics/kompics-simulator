@@ -25,7 +25,7 @@ import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public interface GlobalView {
 

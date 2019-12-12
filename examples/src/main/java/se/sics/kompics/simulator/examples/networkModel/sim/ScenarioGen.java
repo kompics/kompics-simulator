@@ -29,7 +29,7 @@ import se.sics.kompics.simulator.examples.networkModel.BasicPingComp;
 import se.sics.kompics.simulator.network.impl.UniformRandomModel;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class ScenarioGen {
 

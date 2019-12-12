@@ -24,7 +24,7 @@ import se.sics.kompics.network.Msg;
 import se.sics.kompics.simulator.network.NetworkModel;
 
 /**
- * @author Lars Kroll <lkroll@sics.se>
+ * @author Lars Kroll {@literal <lkroll@kth.se>}
  */
 public class UniformRandomModel implements NetworkModel {
 

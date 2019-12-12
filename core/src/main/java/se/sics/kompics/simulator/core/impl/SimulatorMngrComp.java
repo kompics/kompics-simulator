@@ -43,7 +43,7 @@ import se.sics.kompics.simulator.network.identifier.impl.SocketIdExtractor;
 import se.sics.kompics.timer.Timer;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class SimulatorMngrComp extends ComponentDefinition implements SimulatorComp {
 
@@ -112,9 +112,11 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
 
             idE = setup.getIdentifierExtractor();
 
-            // Pair<Address, Set<GlobalViewHandler>> globalViewSetup = setup.getGlobalViewSetup();
+            // Pair<Address, Set<GlobalViewHandler>> globalViewSetup =
+            // setup.getGlobalViewSetup();
             // if (globalViewSetup != null) {
-            // for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1()) {
+            // for (final GlobalViewHandler globalViewHandler : globalViewSetup.getValue1())
+            // {
             // globalViewHandler.setSimulationContext(globalView);
             // subscribe(globalViewHandler, providedNetwork);
             // }
@@ -132,7 +134,8 @@ public class SimulatorMngrComp extends ComponentDefinition implements SimulatorC
                     new Object[] { logPrefix, startNode, startNode.getNodeAddress() });
 
             Config.Builder cb = config().modify(id());
-            // TODO Alex netbeans 8.0.2 bug? need to manually cast the Set to the correct thing
+            // TODO Alex netbeans 8.0.2 bug? need to manually cast the Set to the correct
+            // thing
             for (Map.Entry<String, Object> confUpdate : (Set<Map.Entry<String, Object>>) startNode.initConfigUpdate()
                     .entrySet()) {
                 cb.setValue(confUpdate.getKey(), confUpdate.getValue());

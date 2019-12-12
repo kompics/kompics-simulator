@@ -33,7 +33,7 @@ import se.sics.kompics.simulator.core.SimulatorSystem;
 /**
  * The <code>CodeInterceptor</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public class CodeInterceptor implements Translator {
@@ -104,7 +104,8 @@ public class CodeInterceptor implements Translator {
         }
     }
 
-    // private void decorateHandlers(ClassPool pool, CtClass cc) throws NotFoundException, CannotCompileException {
+    // private void decorateHandlers(ClassPool pool, CtClass cc) throws
+    // NotFoundException, CannotCompileException {
     //
     // //decorate simple handler
     // CtClass[] simple = new CtClass[]{
@@ -124,9 +125,11 @@ public class CodeInterceptor implements Translator {
     // CtMethod patternHandler = cc.getDeclaredMethod("executeEvent", pattern);
     //
     // patternHandler.insertBefore(
-    // "{ " + HandlerDecoratorRegistry.class.getName() + ".beforeHandler($0, $1, $2); }");
+    // "{ " + HandlerDecoratorRegistry.class.getName() + ".beforeHandler($0, $1,
+    // $2); }");
     // patternHandler.insertAfter(
-    // "{ " + HandlerDecoratorRegistry.class.getName() + ".afterHandler($0, $1, $2); }");
+    // "{ " + HandlerDecoratorRegistry.class.getName() + ".afterHandler($0, $1, $2);
+    // }");
     // }
 
 }

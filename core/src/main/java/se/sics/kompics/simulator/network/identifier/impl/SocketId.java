@@ -26,7 +26,7 @@ import java.util.Objects;
 import se.sics.kompics.simulator.network.identifier.Identifier;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 @SuppressWarnings("serial")
 public class SocketId implements Identifier {

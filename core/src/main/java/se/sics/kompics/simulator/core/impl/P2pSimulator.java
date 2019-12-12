@@ -62,7 +62,7 @@ import se.sics.kompics.timer.Timer;
 /**
  * The <code>P2pSimulator</code> class.
  *
- * @author Cosmin Arad <cosmin@sics.se>
+ * @author Cosmin Arad {@literal <cosmin@sics.se>}
  * @version $Id$
  */
 public final class P2pSimulator extends ComponentDefinition implements Simulator, SimulatorComp {

@@ -20,7 +20,7 @@
 package se.sics.kompics.simulator.network;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public interface PartitionMapper<ID extends Object> {
     public int getPartition(ID nodeId);

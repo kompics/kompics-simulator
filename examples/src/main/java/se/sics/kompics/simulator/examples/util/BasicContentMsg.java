@@ -24,7 +24,7 @@ import se.sics.kompics.network.Msg;
 import se.sics.kompics.network.Transport;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class BasicContentMsg<A extends Address, H extends BasicHeader<A>, C extends Object>
         implements Msg<A, BasicHeader<A>>, PatternExtractor<Class<Object>, C> {

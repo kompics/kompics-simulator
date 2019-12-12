@@ -25,10 +25,14 @@ import java.lang.reflect.Proxy;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Freely adapted from <http://surguy.net/articles/communication-across-classloaders.xml>.
+ * A singleton instance, that can provide access to values accross different class loaders.
+ * 
+ * Use to pass reesults from a simulation back to the testing code that spawned the simulation.
+ * 
+ * Freely adapted from <a href= "http://surguy.net/articles/communication-across-classloaders.xml">here</a>.
  * <p>
  * 
- * @author Lars Kroll <lkroll@kth.se>
+ * @author Lars Kroll {@literal <lkroll@kth.se>}
  */
 public class SimulationResultSingleton implements SimulationResultMap {
 

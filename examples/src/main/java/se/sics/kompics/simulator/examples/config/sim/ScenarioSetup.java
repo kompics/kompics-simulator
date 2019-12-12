@@ -28,7 +28,7 @@ import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.examples.util.BasicAddress;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class ScenarioSetup {
 

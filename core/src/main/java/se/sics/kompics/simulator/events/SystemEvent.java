@@ -20,7 +20,7 @@
 package se.sics.kompics.simulator.events;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public abstract class SystemEvent extends SimulationEvent {
     public SystemEvent() {

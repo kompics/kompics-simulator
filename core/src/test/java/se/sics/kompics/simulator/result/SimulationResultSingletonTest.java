@@ -31,7 +31,7 @@ import se.sics.kompics.simulator.instrumentation.CodeInterceptor;
 import se.sics.kompics.simulator.instrumentation.JarURLFixClassLoader;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class SimulationResultSingletonTest {
 

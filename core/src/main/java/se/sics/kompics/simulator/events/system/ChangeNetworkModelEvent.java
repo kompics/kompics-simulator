@@ -23,7 +23,7 @@ import se.sics.kompics.simulator.events.SimulationEvent;
 import se.sics.kompics.simulator.network.NetworkModel;
 
 /**
- * @author Alex Ormenisan <aaor@sics.se>
+ * @author Alex Ormenisan {@literal {@literal <aaor@kth.se>}}
  */
 public class ChangeNetworkModelEvent extends SimulationEvent {
     public final NetworkModel netModel;

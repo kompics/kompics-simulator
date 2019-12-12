@@ -29,7 +29,7 @@ import se.sics.kompics.network.Network;
 import se.sics.kompics.timer.Timer;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class ConfigReadingComp extends ComponentDefinition {
 

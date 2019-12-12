@@ -22,7 +22,7 @@ import se.sics.kompics.ChannelSelector;
 import se.sics.kompics.network.Msg;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 @SuppressWarnings("rawtypes")
 public class DestinationHostSelector extends ChannelSelector<Msg, Identifier> {

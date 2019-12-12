@@ -26,7 +26,7 @@ import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 import java.util.Set;
 
 /**
- * @author Paris Carbone <parisc@kth.se>
+ * @author Paris Carbone {@literal <parisc@kth.se>}
  */
 public class BinaryNetworkModel implements NetworkModel {
 

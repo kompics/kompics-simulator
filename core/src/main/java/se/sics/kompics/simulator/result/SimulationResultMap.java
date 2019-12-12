@@ -21,7 +21,7 @@
 package se.sics.kompics.simulator.result;
 
 /**
- * @author Lars Kroll <lkroll@kth.se>
+ * @author Lars Kroll {@literal <lkroll@kth.se>}
  */
 public interface SimulationResultMap {
     public void put(String key, Object o);

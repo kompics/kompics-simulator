@@ -24,7 +24,7 @@ import java.util.UUID;
 
 /**
  *
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class Pong {
     public final UUID id;

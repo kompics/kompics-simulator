@@ -24,7 +24,7 @@ import se.sics.kompics.network.Address;
 import se.sics.kompics.simulator.network.identifier.IdentifierExtractor;
 
 /**
- * @author Alex Ormenisan <aaor@kth.se>
+ * @author Alex Ormenisan {@literal <aaor@kth.se>}
  */
 public class SocketIdExtractor implements IdentifierExtractor {
 
