@@ -105,7 +105,7 @@ public abstract class SimulationScenario implements Serializable {
         private StochasticProcessStartEvent startEvent;
         private StochasticProcessTerminatedEvent terminateEvent;
         private StochasticProcessEvent stochasticEvent;
-        private Distribution<Long> interArrivalTime = null;
+        private Distribution<Long> interarrivalTime = null;
         protected final LinkedList<OperationGenerator> generators = new LinkedList<>();
         private final String name;
         private boolean started = false;
@@ -119,8 +119,13 @@ public abstract class SimulationScenario implements Serializable {
             this("Process" + processCount);
         }
 
+        @Deprecated
         protected final void eventInterArrivalTime(Distribution<Long> interArrivalTime) {
-            this.interArrivalTime = interArrivalTime;
+            this.eventInterarrivalTime(interArrivalTime);
+        }
+
+        protected final void eventInterarrivalTime(Distribution<Long> interarrivalTime) {
+            this.interarrivalTime = interarrivalTime;
         }
 
         protected final <E extends KompicsEvent> void raise(int count, Operation<E> op) {
@@ -186,7 +191,7 @@ public abstract class SimulationScenario implements Serializable {
             started = true;
             terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
                     name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            stochasticEvent = new StochasticProcessEvent(0, interarrivalTime, terminateEvent, generators, name);
             startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
 
@@ -200,7 +205,7 @@ public abstract class SimulationScenario implements Serializable {
             started = true;
             terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
                     name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            stochasticEvent = new StochasticProcessEvent(0, interarrivalTime, terminateEvent, generators, name);
             startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
 
@@ -214,7 +219,7 @@ public abstract class SimulationScenario implements Serializable {
             startTime = 0;
             terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
                     name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            stochasticEvent = new StochasticProcessEvent(0, interarrivalTime, terminateEvent, generators, name);
             startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
             // we hook this process' start event to the referenced process'
@@ -234,7 +239,7 @@ public abstract class SimulationScenario implements Serializable {
             startTime = delay;
             terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
                     name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            stochasticEvent = new StochasticProcessEvent(0, interarrivalTime, terminateEvent, generators, name);
             startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, 0, name);
             // we hook this process' start event to the referenced process'
@@ -254,7 +259,7 @@ public abstract class SimulationScenario implements Serializable {
             startTime = delay;
             terminateEvent = new StochasticProcessTerminatedEvent(0, new LinkedList<StochasticProcessStartEvent>(),
                     name);
-            stochasticEvent = new StochasticProcessEvent(0, interArrivalTime, terminateEvent, generators, name);
+            stochasticEvent = new StochasticProcessEvent(0, interarrivalTime, terminateEvent, generators, name);
             startEvent = new StochasticProcessStartEvent(startTime, new LinkedList<StochasticProcessStartEvent>(),
                     stochasticEvent, process.length, name);
             // we hook this process' start event to the referenced process'
@@ -338,6 +343,7 @@ public abstract class SimulationScenario implements Serializable {
             });
             cl.delegateLoadingOf("jdk.internal.misc.Unsafe");
             cl.delegateLoadingOf("jdk.internal.reflect.MethodAccessorImpl"); // needed for Mockito#mock
+            cl.delegateLoadingOf("jdk.internal.reflect.ConstructorAccessorImpl");
             cl.delegateLoadingOf("jdk.internal.reflect.SerializationConstructorAccessorImpl");
             cl.addTranslator(cp, t);
             Thread.currentThread().setContextClassLoader(cl);
